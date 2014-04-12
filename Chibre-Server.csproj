@@ -112,13 +112,24 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="ConnectionManager.cs" />
+    <Compile Include="Game\Announce.cs" />
+    <Compile Include="Game\AnnounceType.cs" />
+    <Compile Include="Game\Card.cs" />
+    <Compile Include="Game\Color.cs" />
+    <Compile Include="Game\Connection.cs" />
+    <Compile Include="Game\ConnectionManager.cs" />
     <Compile Include="ConnectionPage.xaml.cs">
       <DependentUpon>ConnectionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Game\GameEngine.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Score.cs" />
+    <Compile Include="Game\Table.cs" />
+    <Compile Include="Game\Team.cs" />
+    <Compile Include="Game\Value.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
