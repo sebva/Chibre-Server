@@ -1,13 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Chibre_Server.Game
 {
     class Score
     {
+        private class Pair<T1, T2>
+        {
+            public Pair(T1 t1, T2 t2)
+            {
+                First = t1;
+                Second = t2;
+            }
+            public T1 First { get; set; }
+            public T2 Second { get; set; }
+        }
+
+        private List<Pair<Object, int>> categories;
         private int one;
         private int twenty;
         private int fifty;
@@ -16,6 +28,11 @@ namespace Chibre_Server.Game
         public Score()
         {
             this.one = this.twenty = this.fifty = this.hundred = 0;
+            categories = new List<Pair<Object, int>>();
+            categories.Add(new Pair<Object, int>(hundred, 100));
+            categories.Add(new Pair<Object, int>(fifty, 50));
+            categories.Add(new Pair<Object, int>(twenty, 20));
+            categories.Add(new Pair<Object, int>(one, 1));
         }
 
         public int Twenty
@@ -40,16 +57,26 @@ namespace Chibre_Server.Game
 
         public void AddPoints(int points)
         {
-            hundred += points / 100;
-            points -= points / 100;
+            foreach(Pair<Object, int> tuple in categories)
+            {
+                int item = (int)tuple.First;
+                item += points / tuple.Second;
+                tuple.First = item;
+            }
 
-            fifty += points / 50;
-            points -= points / 50;
+            for(int i = categories.Count-1; i > 0; --i)
+            {
+                int item1 = (int)categories[i].First;
+                int item2 = (int)categories[i - 1].First;
 
-            twenty += points / 20;
-            points -= points / 20;
+                int value = item1 / categories[i - 1].Second;
+                item2 += value;
+                item1 -= value;
 
-            one += points;
+                categories[i].First = item1;
+                categories[i - 1].First = item2;
+            }
+
         }
     }
 }
