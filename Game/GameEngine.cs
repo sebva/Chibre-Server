@@ -161,10 +161,47 @@ namespace Chibre_Server.Game
 
         private Card WhichCardDoesWin(List<Card> cards)
         {
-            // TODO
-            return cards[0];
+            bool areAllCardsAtout = true;
+            List<Card> atoutCards = new List<Card>();
+            List<Card> colorCards = new List<Card>();
+            foreach(Card card in cards)
+            {
+                areAllCardsAtout &= card.Color == atout;
+                if (card.Color == atout)
+                    atoutCards.Add(card);
+                if(card.Color == cards[0].Color)
+                    colorCards.Add(card);
+            }
+
+            // If all the cards are atout, return the highest score
+            if (areAllCardsAtout)
+                return HighestCard(cards, true);
+            // Someone has maybe cut
+            else if (atoutCards.Count > 0)
+                return HighestCard(atoutCards, true);
+            // We take the first color and get the highest same color cards
+            else 
+                return HighestCard(colorCards, false);
         }
 
+        private Card HighestCard(List<Card> cards, bool isAtout)
+        {
+            Debug.Assert(cards.Count > 0);
+
+            Card maxCard = cards[0];
+            int maxScore = Card.ScoreCard(maxCard, isAtout);
+
+            foreach (Card card in cards)
+            {
+                int score = Card.ScoreCard(card, isAtout);
+                if (score > maxScore)
+                {
+                    maxScore = score;
+                    maxCard = card;
+                }
+            }
+            return maxCard;
+        }
         private int ComputePointsTurn(List<Card> cards)
         {
             int sum = 0;
