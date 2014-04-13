@@ -8,5 +8,8 @@ namespace Chibre_Server.Game
 {
     class Table
     {
+        private Announce announce;
+        private List<Card> cards;
+        private GameEngine gameEngine;
     }
 }

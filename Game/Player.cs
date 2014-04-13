@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Chibre_Server.Game
 {
@@ -43,6 +44,12 @@ namespace Chibre_Server.Game
         public void Announce(AnnounceType a)
         {
 
+        }
+
+        public void addCard(Card card)
+        {
+            Debug.Assert(cards.Count <= 9);
+            cards.Add(card);
         }
 
         public void PlayCard(Card card)

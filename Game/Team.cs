@@ -24,7 +24,7 @@ namespace Chibre_Server.Game
             players[players.Length - 1] = player;
         }
 
-        public int Lenght
+        public int Length
         {
             get { return players.Length; }
         }
@@ -32,6 +32,11 @@ namespace Chibre_Server.Game
         public Score Score
         {
             get { return score; }
+        }
+
+        public Player this[int index]
+        {
+            get { return players[index]; }
         }
     }
 }
