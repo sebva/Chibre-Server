@@ -174,27 +174,24 @@ namespace Chibre_Server.Game
                     colorCards.Add(card);
             }
 
-            // If all the cards are atout, return the highest score
-            if (areAllCardsAtout)
-                return HighestCard(cards, true);
-            // Someone has maybe cut
-            else if (atoutCards.Count > 0)
-                return HighestCard(atoutCards, true);
+            // If all the cards are atout or someone has maybe cut, return the highest score among the atout card
+            if (areAllCardsAtout || atoutCards.Count > 0)
+                return MostPowerfulCard(atoutCards, true);
             // We take the first color and get the highest same color cards
             else 
-                return HighestCard(colorCards, false);
+                return MostPowerfulCard(colorCards, false);
         }
 
-        private Card HighestCard(List<Card> cards, bool isAtout)
+        private Card MostPowerfulCard(List<Card> cards, bool isAtout)
         {
             Debug.Assert(cards.Count > 0);
 
             Card maxCard = cards[0];
-            int maxScore = Card.ScoreCard(maxCard, isAtout);
+            int maxScore = Card.PowerCard(maxCard, isAtout);
 
             foreach (Card card in cards)
             {
-                int score = Card.ScoreCard(card, isAtout);
+                int score = Card.PowerCard(card, isAtout);
                 if (score > maxScore)
                 {
                     maxScore = score;
