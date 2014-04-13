@@ -89,6 +89,13 @@ namespace Chibre_Server.Game
             players.Add(player.Id, team[team.Length-1]);
         }
 
+        public void AddCardTable(Card card)
+        {
+            table.AddCard(playerTurn, card);
+            playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
+            //TODO : Sync with GameProcess
+        }
+
         private void DistributeCards()
         {
             List<Card> cards = new List<Card>();
@@ -128,12 +135,14 @@ namespace Chibre_Server.Game
             for(int i = 0; i < 4; ++i)
             {
                 players[i].LegalCards(LegalCards(players[i]));
+                // TODO : Sync with AddCardTable
             }
         }
 
         private List<Card> LegalCards(Player player)
         {
             List<Pair<Card, bool>> legalCards = new List<Pair<Card, bool>>();
+            List<Card> cardsTable = table.Cards;
             foreach (Card card in player.Cards)
                 legalCards.Add(new Pair<Card, bool>(card, false));
 
@@ -144,7 +153,7 @@ namespace Chibre_Server.Game
             else
             {
                 bool areAllCardsAtout = true;
-                foreach(Card card in table.Cards)
+                foreach (Card card in cardsTable)
                 {
                     areAllCardsAtout = card.Color == atout;
                     if (!areAllCardsAtout)
@@ -171,7 +180,7 @@ namespace Chibre_Server.Game
                 }
                 else
                 {
-                    Color color = table.Cards[0].Color;
+                    Color color = table.FirstCardColor();
 
                     int count = 0;
                     // Enable all same color cards
@@ -193,7 +202,7 @@ namespace Chibre_Server.Game
 
                     // If some has cut, we have to find the highest cut card and disable all atout card below its value
                     List<Card> atoutCards = new List<Card>();
-                    foreach (Card card in table.Cards)
+                    foreach (Card card in cardsTable)
                         if (card.Color == atout)
                             atoutCards.Add(card);
 
