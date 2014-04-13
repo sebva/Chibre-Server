@@ -73,5 +73,10 @@ namespace Chibre_Server.Game
         {
 
         }
+
+        public void LegalCards(List<Card> cards)
+        {
+            //TODO : Send to the device
+        }
     }
 }
