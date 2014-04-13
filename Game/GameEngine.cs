@@ -18,8 +18,11 @@ namespace Chibre_Server.Game
         private int gameNumber;
         private int atoutPlayer;
         private int playerTurn;
+
+        private Random random;
         private GameEngine()
         {
+            random = new Random();
             teams = new Team[2];
             teams[0] = new Team(this);
             teams[1] = new Team(this);
@@ -74,8 +77,7 @@ namespace Chibre_Server.Game
             {
                 Team team = teams[i % 2];
                 team.addPlayer(players[i]);
-                Player player = team[team.Length-1];
-                this.players.Add(player.Id, player);
+                this.players.Add(players[i].Id, players[i]);
             }
         }
 
@@ -86,7 +88,7 @@ namespace Chibre_Server.Game
                 team = teams[1];
 
             team.addPlayer(player);
-            players.Add(player.Id, team[team.Length-1]);
+            players.Add(player.Id, player);
         }
 
         public void AddCardTable(Card card)
@@ -120,7 +122,6 @@ namespace Chibre_Server.Game
         /// <returns>Shuffled list</returns>
         private void Shuffle<T>(List<T> list)
         {
-            Random random = new Random();
             for(int i = 0; i < list.Count; ++i)
             {
                 int j = random.Next(i, list.Count-1);
@@ -266,7 +267,7 @@ namespace Chibre_Server.Game
                     if (count == 0)
                         foreach (Pair<Card, bool> pair in legalCards)
                             pair.Second = true;
-                    // We enable the atout cards
+                    // We enable only the atout cards
                     else 
                         foreach (Pair<Card, bool> pair in legalCards)
                             pair.Second = pair.First.Color == atout;
