@@ -21,13 +21,8 @@ namespace Chibre_Server.Game
 
         public void AddCard(int playerId, Card card)
         {
+            Debug.Assert(cards.Count <= 4);
             cards.Add(new Pair<Card, int>(card, playerId));
-        }
-
-        public void AddAnnounce(Announce announce)
-        {
-            this.announce = announce;
-            // TODO : Communicate with the GUI
         }
 
         public int Length
@@ -54,7 +49,7 @@ namespace Chibre_Server.Game
 
         public void Clear()
         {
-            CardsByPlayer.Clear();
+            cards.Clear();
         }
 
         public List<Pair<Card, int>> CardsByPlayer

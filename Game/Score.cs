@@ -46,26 +46,35 @@ namespace Chibre_Server.Game
 
         public void AddPoints(int points)
         {
-            foreach(Pair<Object, int> tuple in categories)
+            Addition(points);
+            Reduce();
+        }
+
+        private void Addition(int points)
+        {
+            foreach (Pair<Object, int> tuple in categories)
             {
                 int item = (int)tuple.First;
                 item += points / tuple.Second;
+                points -= points / tuple.Second;
                 tuple.First = item;
             }
+        }
 
-            for(int i = categories.Count-1; i > 0; --i)
+        private void Reduce()
+        {
+            for (int i = categories.Count - 1; i > 0; --i)
             {
-                int item1 = (int)categories[i].First;
-                int item2 = (int)categories[i - 1].First;
+                int currentItem = (int)categories[i].First;
+                int nextItem = (int)categories[i - 1].First;
 
-                int value = item1 / categories[i - 1].Second;
-                item2 += value;
-                item1 -= value;
+                int value = currentItem / categories[i - 1].Second;
+                nextItem += value;
+                currentItem -= value;
 
-                categories[i].First = item1;
-                categories[i - 1].First = item2;
+                categories[i].First = currentItem;
+                categories[i - 1].First = nextItem;
             }
-
         }
     }
 }

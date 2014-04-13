@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chibre_Server
 {
-    public class Pair<T1, T2>
+    class Pair<T1, T2>
     {
         public Pair(T1 t1, T2 t2)
         {

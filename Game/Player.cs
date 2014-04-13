@@ -21,6 +21,7 @@ namespace Chibre_Server.Game
             this.team = team;
             this.connection = connection;
             this.cards = new SortedSet<Card>(new Card.CardComparer());
+            this.team.GameEngine.AddPlayer(this);
         }
 
         public Team Team
@@ -41,6 +42,7 @@ namespace Chibre_Server.Game
         public void Announce(Announce annouce)
         {
             team.GameEngine.AddAnnounce(annouce);
+            //TODO : Call this method whith the communication
         }
 
         public void AddCard(Card card)

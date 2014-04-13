@@ -14,7 +14,6 @@ namespace Chibre_Server.Game
         private Team[] teams;
         private Dictionary<int, Player> players;
         private List<Announce> announces;
-        private Random random;
 
         private Color atout;
         private int gameNumber;
@@ -23,7 +22,6 @@ namespace Chibre_Server.Game
 
         private GameEngine()
         {
-            random = new Random();
             teams = new Team[2];
             teams[0] = new Team(this);
             teams[1] = new Team(this);
@@ -49,20 +47,11 @@ namespace Chibre_Server.Game
 
         public void StartNewTurn()
         {
-            ++gameNumber;
-
             DistributeCards();
-
-            if (gameNumber == 1) // The atout is the player with the 7 of diamonds
-            {
-                Card sevenDiamonds = Card.CardInstance(Color.Carreau, Value.Seven);
+            if (++gameNumber == 1) // The atout is the player with the 7 of diamonds
                 foreach (KeyValuePair<int, Player> entry in players)
-                    if(entry.Value.Cards.Contains(sevenDiamonds))
-                    {
+                    if(entry.Value.Cards.Contains(Card.CardInstance(Color.Carreau, Value.Seven)))
                         atoutPlayer = entry.Key;
-                        break;
-                    }
-            }
             else
                 atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
             playerTurn = atoutPlayer;
@@ -77,40 +66,22 @@ namespace Chibre_Server.Game
 
         public void ManageAnnounces()
         {
-            if(announces.Count > 0)
+            if(announces.Count == 1)
+                announces[0].Player.Team.Score.AddPoints(announces[0].Score);
+            else if(announces.Count > 1)
             {
-                if(announces.Count == 1)
-                    announces[0].Player.Team.Score.AddPoints(announces[0].Score);
-                else
-                {
-                    announces.Sort(new Announce.AnnounceComparable()); //Desc order
-                    //In any case, the kept annouce is the first if equality or the highest and all the annouces of the team
-                    foreach (Announce announce in announces)
-                        if (announce.Player.Team == announces[0].Player.Team)
-                            announce.Player.Team.Score.AddPoints(announce.Score);
-                }
+                announces.Sort(new Announce.AnnounceComparable()); //Desc order
+                //In any case, the kept annouce is the first if equality or the highest and all the annouces of the team
+                foreach (Announce announce in announces)
+                    if (announce.Player.Team == announces[0].Player.Team)
+                        announce.Player.Team.Score.AddPoints(announce.Score);
             }
             announces.Clear();
         }
 
-        public void AddPlayers(Player[] players)
-        {
-            Debug.Assert(players.Length == 4);
-
-            for (int i = 0; i < players.Length; ++i)
-            {
-                Team team = teams[i % 2];
-                team.addPlayer(players[i]);
-                this.players.Add(players[i].Id, players[i]);
-            }
-        }
-
         public void AddPlayer(Player player)
         {
-            Team team = teams[0];
-            if (teams[0].Length == 1 && teams[1].Length == 0 || teams[0].Length == 2 && teams[1].Length == 1)
-                team = teams[1];
-
+            Team team = teams[player.Id % 2];
             team.addPlayer(player);
             players.Add(player.Id, player);
         }
@@ -133,7 +104,7 @@ namespace Chibre_Server.Game
             foreach (Value value in (Value[])Enum.GetValues(typeof(Value)))
                 foreach (Color color in (Color[])Enum.GetValues(typeof(Color)))
                     cards.Add(Card.CardInstance(color, value));
-            Shuffle(cards);
+            Utils.Shuffle(cards);
 
             int n = cards.Count;
             for(int i = 0; i < n; ++i)
@@ -142,22 +113,6 @@ namespace Chibre_Server.Game
                         entry.Value.AddCard(cards.Last());
                         cards.RemoveAt(cards.Count-1);
                     }
-        }
-
-        /// <summary>
-        /// Use Fisher-Yates algorithm
-        /// </summary>
-        /// <param name="list">List to shuffle</param>
-        /// <returns>Shuffled list</returns>
-        private void Shuffle<T>(List<T> list)
-        {
-            for(int i = 0; i < list.Count; ++i)
-            {
-                int j = random.Next(i, list.Count-1);
-                T foo = list[i];
-                list[i] = list[j];
-                list[j] = foo;
-            }
         }
 
         private void GameProcess()
@@ -191,12 +146,10 @@ namespace Chibre_Server.Game
 
         private Card WhichCardDoesWin(List<Card> cards)
         {
-            bool areAllCardsAtout = true;
             List<Card> atoutCards = new List<Card>();
             List<Card> colorCards = new List<Card>();
             foreach(Card card in cards)
             {
-                areAllCardsAtout &= card.Color == atout;
                 if (card.Color == atout)
                     atoutCards.Add(card);
                 if(card.Color == cards[0].Color)
@@ -204,7 +157,7 @@ namespace Chibre_Server.Game
             }
 
             // If all the cards are atout or someone has maybe cut, return the highest score among the atout card
-            if (areAllCardsAtout || atoutCards.Count > 0)
+            if (atoutCards.Count == cards.Count || atoutCards.Count > 0)
                 return MostPowerfulCard(atoutCards, true);
             // We take the first color and get the highest same color cards
             else 
@@ -229,6 +182,7 @@ namespace Chibre_Server.Game
             }
             return maxCard;
         }
+
         private int ComputePointsTurn(List<Card> cards)
         {
             int sum = 0;
@@ -252,11 +206,7 @@ namespace Chibre_Server.Game
             {
                 bool areAllCardsAtout = true;
                 foreach (Card card in cardsTable)
-                {
-                    areAllCardsAtout = card.Color == atout;
-                    if (!areAllCardsAtout)
-                        break;
-                }
+                    areAllCardsAtout &= card.Color == atout;
 
                 if(areAllCardsAtout)
                 {
@@ -307,11 +257,11 @@ namespace Chibre_Server.Game
                     // Someone has cut, find the highest card
                     if(atoutCards.Count > 0)
                     {
-                        Card.AtoutComparer atoutComparable = new Card.AtoutComparer();
-                        atoutCards.Sort(atoutComparable);
+                        Card.AtoutComparer atoutComparer = new Card.AtoutComparer();
+                        atoutCards.Sort(atoutComparer);
 
                         foreach (Pair<Card, bool> pair in legalCards)
-                            if (pair.First.Color == atout && atoutComparable.Compare(pair.First, atoutCards[0]) == 1)
+                            if (pair.First.Color == atout && atoutComparer.Compare(pair.First, atoutCards[0]) > 0)
                                 pair.Second = true;
                     }
                 }
@@ -321,9 +271,7 @@ namespace Chibre_Server.Game
             foreach (Pair<Card, bool> pair in legalCards)
                 if (pair.Second)
                     output.Add(pair.First);
-            if(output.Count <= 0)
-                foreach (Pair<Card, bool> pair in legalCards)
-                    output.Add(pair.First);
+
             return output;
         }
     }

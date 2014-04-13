@@ -8,9 +8,16 @@ namespace Chibre_Server.Game
 {
     class Announce
     {
-        // Desc order
+        // Desc Order
         public class AnnounceComparable : IComparer<Announce>
         {
+            private static Card.CardComparer cardComparer;
+
+            static AnnounceComparable()
+            {
+                cardComparer = new Card.CardComparer();
+            }
+
             public int Compare(Announce a1, Announce a2)
             {
                 if (a1.Power < a2.Power)
@@ -18,13 +25,15 @@ namespace Chibre_Server.Game
                 else if (a1.Power > a2.Power)
                     return -1;
                 else
-                    return (new Card.CardComparer()).Compare(a1.HighestCard, a2.HighestCard);
+                    return cardComparer.Compare(a1.HighestCard, a2.HighestCard);
             }
         }
 
         private AnnounceType announceType;
         private SortedSet<Card> cards;
         private Player player;
+        private int score;
+        private int power;
 
         private static readonly Dictionary<AnnounceType, int> scoreAnnouce;
         private static readonly Dictionary<AnnounceType, int> powerAnnounce;
@@ -48,21 +57,13 @@ namespace Chibre_Server.Game
             powerAnnounce.Add(AnnounceType.Twenty, 1);
         }
 
-        private static int ScoreAnnounce(AnnounceType annouceType)
-        {
-            return scoreAnnouce[annouceType];
-        }
-
-        private static int PowerAnnounce(AnnounceType announceType)
-        {
-            return powerAnnounce[announceType];
-        }
-
         public Announce(AnnounceType announceType, Player player, List<Card> cards)
         {
             this.announceType = announceType;
             this.player = player;
             this.cards = new SortedSet<Card>(cards, new Card.CardComparer());
+            score = scoreAnnouce[announceType];
+            power = powerAnnounce[announceType];
         }
 
         public Player Player
@@ -72,7 +73,7 @@ namespace Chibre_Server.Game
 
         public int Score
         {
-            get { return ScoreAnnounce(announceType); }
+            get { return score; }
         }
 
         private Card HighestCard
@@ -82,7 +83,7 @@ namespace Chibre_Server.Game
 
         private int Power
         {
-            get { return PowerAnnounce(announceType); }
+            get { return power; }
         }
     }
 }

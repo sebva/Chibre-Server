@@ -8,6 +8,9 @@ namespace Chibre_Server.Game
 {
     class Card
     {
+        /// <summary>
+        /// Asc Order
+        /// </summary>
         public class AtoutComparer : IComparer<Card>
         {
             private static readonly List<Value> values;
@@ -28,14 +31,12 @@ namespace Chibre_Server.Game
 
             public int Compare(Card c1, Card c2)
             {
-                if (values.IndexOf(c1.Value) < values.IndexOf(c2.Value))
-                    return 1;
-                else if (values.IndexOf(c1.Value) > values.IndexOf(c2.Value))
-                    return -1;
-                else
-                    return 0;
+                return -values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
             }
         }
+        /// <summary>
+        /// Asc Order
+        /// </summary>
         public class CardComparer : IComparer<Card>
         {
             private static readonly List<Value> values;
@@ -63,27 +64,30 @@ namespace Chibre_Server.Game
 
             public int Compare(Card c1, Card c2)
             {
-                if (colors.IndexOf(c1.Color) > colors.IndexOf(c2.Color))
-                    return -1;
-                else if (colors.IndexOf(c1.Color) < colors.IndexOf(c2.Color))
-                    return 1;
-                else if (values.IndexOf(c1.Value) > values.IndexOf(c2.Value))
-                    return -1;
-                else if (values.IndexOf(c1.Value) < values.IndexOf(c2.Value))
-                    return 1;
+                int color = -colors.IndexOf(c1.Color).CompareTo(colors.IndexOf(c2.Color));
+
+                if (color != 0)
+                    return color;
                 else
-                    return 0;
+                    return -values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
             }
         }
 
-        private static Dictionary<Tuple<Color, Value>, Card> cards;
-        private static readonly Dictionary<Value, int> scoreNormalCards;
-        private static readonly Dictionary<Value, int> scoreAtoutCards;
-        
         /// <summary>
-        /// Key : (Value Card, isAtout) => Power
+        /// MultiSeton (Singleton Idiom)
+        /// </summary>
+        private static Dictionary<Tuple<Color, Value>, Card> cards;
+
+        /// <summary>
+        /// (Value Card, isAtout) => Power
         /// </summary>
         private static readonly Dictionary<Tuple<Value, bool>, int> powerCards;
+
+        private static readonly Dictionary<Value, int> scoreNormalCards;
+        private static readonly Dictionary<Value, int> scoreAtoutCards;
+
+        private Color color;
+        private Value value;
 
         static Card()
         {
@@ -157,20 +161,18 @@ namespace Chibre_Server.Game
 
         private Card(Color color, Value value)
         {
-            this.Color = color;
-            this.Value = value;
+            this.color = color;
+            this.value = value;
         }
 
         public Color Color
         {
-            private set;
-            get;
+            get { return color; }
         }
 
         public Value Value
         {
-            private set;
-            get;
+            get { return value; }
         }
     }
 }
