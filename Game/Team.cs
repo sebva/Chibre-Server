@@ -15,7 +15,7 @@ namespace Chibre_Server.Game
 
         public Team(GameEngine gameEngine)
         {
-            this.score = new Score();
+            score = new Score();
             players = new Player[2];
             this.gameEngine = gameEngine;
         }

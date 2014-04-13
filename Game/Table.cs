@@ -9,7 +9,6 @@ namespace Chibre_Server.Game
 {
     class Table
     {
-        private Announce announce;
         private List<Pair<Card, int>> cards;
         private GameEngine gameEngine;
 
