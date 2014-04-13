@@ -38,9 +38,9 @@ namespace Chibre_Server.Game
             get { return id; }
         }
 
-        public void Announce(AnnounceType a)
+        public void Announce(Announce annouce)
         {
-
+            team.GameEngine.AddAnnounce(annouce);
         }
 
         public void AddCard(Card card)
@@ -52,7 +52,7 @@ namespace Chibre_Server.Game
         public void PlayCard(Card card)
         {
             cards.Remove(card);
-            //team.GameEngine.
+            team.GameEngine.AddCardTable(card);
         }
 
         public void LegalCards(List<Card> cards)

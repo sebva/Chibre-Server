@@ -13,20 +13,22 @@ namespace Chibre_Server.Game
         private Table table;
         private Team[] teams;
         private Dictionary<int, Player> players;
+        private List<Announce> announces;
+        private Random random;
 
         private Color atout;
         private int gameNumber;
         private int atoutPlayer;
         private int playerTurn;
 
-        private Random random;
         private GameEngine()
         {
             random = new Random();
             teams = new Team[2];
             teams[0] = new Team(this);
             teams[1] = new Team(this);
-            
+            announces = new List<Announce>();
+
             table = new Table(this);
             players = new Dictionary<int, Player>();
             gameNumber = 0;
@@ -66,7 +68,28 @@ namespace Chibre_Server.Game
             playerTurn = atoutPlayer;
 
             for (int i = 0; i < 9; ++i)
+            {
+                if (i == 1)
+                    ManageAnnounces();
                 GameProcess();
+            }
+        }
+
+        public void ManageAnnounces()
+        {
+            if(announces.Count > 0)
+            {
+                if(announces.Count == 1)
+                    announces[0].Player.Team.Score.AddPoints(announces[0].Score);
+                else
+                {
+                    announces.Sort(new Announce.AnnounceComparable()); //Desc order
+                    //In any case, the kept annouce is the first if equality or the highest and all the annouces of the team
+                    foreach (Announce announce in announces)
+                        if (announce.Player.Team == announces[0].Player.Team)
+                            announce.Player.Team.Score.AddPoints(announce.Score);
+                }
+            }
         }
 
         public void AddPlayers(Player[] players)
@@ -96,6 +119,11 @@ namespace Chibre_Server.Game
             table.AddCard(playerTurn, card);
             playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
             //TODO : Sync with GameProcess
+        }
+
+        public void AddAnnounce(Announce annouce)
+        {
+            announces.Add(annouce);
         }
 
         private void DistributeCards()
@@ -278,7 +306,7 @@ namespace Chibre_Server.Game
                     // Someone has cut, find the highest card
                     if(atoutCards.Count > 0)
                     {
-                        Card.AtoutComparable atoutComparable = new Card.AtoutComparable();
+                        Card.AtoutComparer atoutComparable = new Card.AtoutComparer();
                         atoutCards.Sort(atoutComparable);
 
                         foreach (Pair<Card, bool> pair in legalCards)
