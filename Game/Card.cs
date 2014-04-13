@@ -8,11 +8,11 @@ namespace Chibre_Server.Game
 {
     class Card
     {
-        public class AtoutComparable : IComparer<Card>
+        public class AtoutComparer : IComparer<Card>
         {
             private static readonly List<Value> values;
 
-            static AtoutComparable()
+            static AtoutComparer()
             {
                 values = new List<Value>();
                 values.Add(Value.Valet);
@@ -32,6 +32,45 @@ namespace Chibre_Server.Game
                     return 1;
                 else if (values.IndexOf(c1.Value) > values.IndexOf(c2.Value))
                     return -1;
+                else
+                    return 0;
+            }
+        }
+        public class CardComparer : IComparer<Card>
+        {
+            private static readonly List<Value> values;
+            private static readonly List<Color> colors;
+
+            static CardComparer()
+            {
+                values = new List<Value>();
+                values.Add(Value.As);
+                values.Add(Value.Roi);
+                values.Add(Value.Dame);
+                values.Add(Value.Valet);
+                values.Add(Value.Ten);
+                values.Add(Value.Nine);
+                values.Add(Value.Eight);
+                values.Add(Value.Seven);
+                values.Add(Value.Six);
+
+                colors = new List<Color>();
+                colors.Add(Color.Coeur);
+                colors.Add(Color.Pique);
+                colors.Add(Color.Carreau);
+                colors.Add(Color.Trefle);
+            }
+
+            public int Compare(Card c1, Card c2)
+            {
+                if (colors.IndexOf(c1.Color) > colors.IndexOf(c2.Color))
+                    return -1;
+                else if (colors.IndexOf(c1.Color) < colors.IndexOf(c2.Color))
+                    return 1;
+                else if (values.IndexOf(c1.Value) > values.IndexOf(c2.Value))
+                    return -1;
+                else if (values.IndexOf(c1.Value) < values.IndexOf(c2.Value))
+                    return 1;
                 else
                     return 0;
             }

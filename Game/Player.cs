@@ -15,29 +15,12 @@ namespace Chibre_Server.Game
         private Team team;
         private int id;
 
-        private class CardComparer : IComparer<Card>
-        {
-            public int Compare(Card c1, Card c2)
-            {
-                if (c1.Color < c2.Color)
-                    return -1;
-                else if (c1.Color > c2.Color)
-                    return 1;
-                else if (c1.Value < c2.Value)
-                    return -1;
-                else if (c1.Value > c2.Value)
-                    return 1;
-                else
-                    return 0;
-            }
-        }
-
         public Player(int id, ref Team team, ref Connection connection)
         {
             this.id = id;
             this.team = team;
             this.connection = connection;
-            this.cards = new SortedSet<Card>(new CardComparer());
+            this.cards = new SortedSet<Card>(new Card.CardComparer());
         }
 
         public Team Team
