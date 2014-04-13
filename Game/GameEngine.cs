@@ -21,8 +21,8 @@ namespace Chibre_Server.Game
         private GameEngine()
         {
             teams = new Team[2];
-            teams[0] = new Team();
-            teams[1] = new Team();
+            teams[0] = new Team(this);
+            teams[1] = new Team(this);
             
             table = new Table(this);
             players = new Dictionary<int, Player>();

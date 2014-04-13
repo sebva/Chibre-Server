@@ -11,11 +11,13 @@ namespace Chibre_Server.Game
     {
         private Player[] players;
         private Score score;
+        private GameEngine gameEngine;
 
-        public Team()
+        public Team(GameEngine gameEngine)
         {
             this.score = new Score();
             players = new Player[2];
+            this.gameEngine = gameEngine;
         }
 
         public void addPlayer(Player player)
@@ -37,6 +39,11 @@ namespace Chibre_Server.Game
         public Player this[int index]
         {
             get { return players[index]; }
+        }
+
+        public GameEngine GameEngine
+        {
+            get { return gameEngine; }
         }
     }
 }
