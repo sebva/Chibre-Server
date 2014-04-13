@@ -12,6 +12,8 @@ namespace Chibre_Server.Game
     {
         private Connection connection;
         private SortedSet<Card> cards;
+        private Team team;
+        private int id;
 
         private class CardComparer : IComparer<Card>
         {
@@ -32,30 +34,25 @@ namespace Chibre_Server.Game
 
         public Player(int id, ref Team team, ref Connection connection)
         {
-            this.Id = id;
-            this.Team = team;
+            this.id = id;
+            this.team = team;
             this.connection = connection;
             this.cards = new SortedSet<Card>(new CardComparer());
         }
 
         public Team Team
         {
-            private set;
-            get;
+            get { return team; }
         }
 
         public SortedSet<Card> Cards
         {
-            get
-            {
-                return this.cards;
-            }
+            get { return this.cards; }
         }
 
         public int Id
         {
-            private set;
-            get;
+            get { return id; }
         }
 
         public void Announce(AnnounceType a)
@@ -71,7 +68,8 @@ namespace Chibre_Server.Game
 
         public void PlayCard(Card card)
         {
-
+            cards.Remove(card);
+            //team.GameEngine.
         }
 
         public void LegalCards(List<Card> cards)

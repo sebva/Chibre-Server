@@ -137,6 +137,40 @@ namespace Chibre_Server.Game
                 players[i].LegalCards(LegalCards(players[i]));
                 // TODO : Sync with AddCardTable
             }
+            FinishTheTurn();
+        }
+
+        private void FinishTheTurn()
+        {
+            List<Card> cards = table.Cards;
+            List<Pair<Card, int>> cardsByPlayer = table.CardsByPlayer;
+
+            Card card = WhichCardDoesWin(cards);
+            Player winner = null;
+            foreach(Pair<Card, int> pair in cardsByPlayer)
+                if(pair.First == card)
+                {
+                    winner = players[pair.Second];
+                    break;
+                }
+            winner.Team.Score.AddPoints(ComputePointsTurn(cards));
+            table.Clear();
+
+            playerTurn = winner.Id;
+        }
+
+        private Card WhichCardDoesWin(List<Card> cards)
+        {
+            // TODO
+            return cards[0];
+        }
+
+        private int ComputePointsTurn(List<Card> cards)
+        {
+            int sum = 0;
+            foreach (Card card in cards)
+                sum += Card.ScoreCard(card, card.Color == atout);
+            return sum;
         }
 
         private List<Card> LegalCards(Player player)
@@ -227,24 +261,6 @@ namespace Chibre_Server.Game
                 foreach (Pair<Card, bool> pair in legalCards)
                     output.Add(pair.First);
             return output;
-        }
-
-        public Color CurrentAtout
-        {
-            private set;
-            get;
-        }
-
-        public Table Table
-        {
-            private set;
-            get;
-        }
-
-        public Team[] Teams
-        {
-            private set;
-            get;
         }
     }
 }
