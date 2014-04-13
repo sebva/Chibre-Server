@@ -130,7 +130,9 @@
     <Compile Include="Game\Score.cs" />
     <Compile Include="Game\Table.cs" />
     <Compile Include="Game\Team.cs" />
+    <Compile Include="Game\Utils.cs" />
     <Compile Include="Game\Value.cs" />
+    <Compile Include="Game\Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
