@@ -21,7 +21,7 @@ namespace Chibre_Server.Game
             if(!cards.ContainsKey(tuple))
             {
                 Card card = new Card(color, value);
-                cards[Tuple.Create<Color, Value>(color, value)] =  card;
+                cards[tuple] =  card;
             }
 
             return cards[tuple];

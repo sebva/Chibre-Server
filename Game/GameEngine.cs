@@ -9,13 +9,16 @@ namespace Chibre_Server.Game
     class GameEngine
     {
         private GameEngine instance = null;
+        private Table table;
+        private Team[] teams;
+        private Color atout;
 
         private GameEngine()
         {
-            Teams = new Team[2];
-            Teams[0] = new Team();
-            Teams[1] = new Team();
-            Table = new Table();
+            teams = new Team[2];
+            teams[0] = new Team();
+            teams[1] = new Team();
+            table = new Table();
         }
 
         public GameEngine Instance

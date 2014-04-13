@@ -8,9 +8,12 @@ namespace Chibre_Server.Game
 {
     class Team
     {
+        private Player[] players;
+        private Score score;
         public Team()
         {
-            this.Score = new Score();
+            this.score = new Score();
+            players = new Player[2];
         }
 
         public Score Score
