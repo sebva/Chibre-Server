@@ -24,6 +24,23 @@ namespace Chibre_Server.Game
             this.team.GameEngine.AddPlayer(this);
         }
 
+        /// <summary>
+        /// Give the possibity to choose atout
+        /// </summary>
+        /// <returns>True : has chosen, False : has "chibré" </returns>
+        public bool ChooseAtout()
+        {
+            //TODO : Choose atout
+            //team.GameEngine.ChooseAtout(...);
+            return true;
+        }
+
+        public void ChooseAtoutChiber()
+        {
+            //TODO : Choose atout;
+            //team.GameEngine.ChooseAtout(...);
+        }
+
         public Team Team
         {
             get { return team; }

@@ -56,6 +56,8 @@ namespace Chibre_Server.Game
                 atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
             playerTurn = atoutPlayer;
 
+            ChooseAtout();
+
             for (int i = 0; i < 9; ++i)
             {
                 if (i == 1)
@@ -64,7 +66,21 @@ namespace Chibre_Server.Game
             }
         }
 
-        public void ManageAnnounces()
+        private void ChooseAtout()
+        {
+            bool atoutChosen = !players[atoutPlayer].ChooseAtout();
+            //TODO Wait until an answer of player
+
+            players[(atoutPlayer + 2) % players.Count].ChooseAtoutChiber();
+            //TODO Wait unti the player has chosen the atout
+        }
+
+        public void ChooseAtout(Color atout)
+        {
+            this.atout = atout;
+        }
+
+        private void ManageAnnounces()
         {
             if(announces.Count == 1)
                 announces[0].Player.Team.Score.AddPoints(announces[0].Score);
