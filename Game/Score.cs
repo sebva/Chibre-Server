@@ -8,17 +8,6 @@ namespace Chibre_Server.Game
 {
     class Score
     {
-        private class Pair<T1, T2>
-        {
-            public Pair(T1 t1, T2 t2)
-            {
-                First = t1;
-                Second = t2;
-            }
-            public T1 First { get; set; }
-            public T2 Second { get; set; }
-        }
-
         private List<Pair<Object, int>> categories;
         private int one;
         private int twenty;
