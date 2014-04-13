@@ -90,6 +90,7 @@ namespace Chibre_Server.Game
                             announce.Player.Team.Score.AddPoints(announce.Score);
                 }
             }
+            announces.Clear();
         }
 
         public void AddPlayers(Player[] players)
