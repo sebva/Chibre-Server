@@ -38,12 +38,40 @@ namespace Chibre_Server.Game
         }
 
         private static Dictionary<Tuple<Color, Value>, Card> cards;
+        private static readonly Dictionary<Value, int> scoreNormalCards;
+        private static readonly Dictionary<Value, int> scoreAtoutCards;
 
         static Card()
         {
             cards = new Dictionary<Tuple<Color, Value>, Card>();
+            scoreNormalCards = new Dictionary<Value, int>();
+            scoreAtoutCards = new Dictionary<Value, int>();
+
+            scoreNormalCards.Add(Value.Six, 0);
+            scoreNormalCards.Add(Value.Seven, 0);
+            scoreNormalCards.Add(Value.Eight, 0);
+            scoreNormalCards.Add(Value.Nine, 0);
+            scoreNormalCards.Add(Value.Ten, 10);
+            scoreNormalCards.Add(Value.Valet, 2);
+            scoreNormalCards.Add(Value.Dame, 3);
+            scoreNormalCards.Add(Value.Roi, 4);
+            scoreNormalCards.Add(Value.As, 11);
+
+            scoreAtoutCards.Add(Value.Six, scoreNormalCards[Value.Six]);
+            scoreAtoutCards.Add(Value.Seven, scoreNormalCards[Value.Seven]);
+            scoreAtoutCards.Add(Value.Eight, scoreNormalCards[Value.Eight]);
+            scoreAtoutCards.Add(Value.Nine, 14);
+            scoreAtoutCards.Add(Value.Ten, scoreNormalCards[Value.Ten]);
+            scoreAtoutCards.Add(Value.Valet, 20);
+            scoreAtoutCards.Add(Value.Dame, scoreNormalCards[Value.Dame]);
+            scoreAtoutCards.Add(Value.Roi, scoreNormalCards[Value.Roi]);
+            scoreAtoutCards.Add(Value.As, scoreNormalCards[Value.As]);
         }
 
+        public static int ScoreCard(Card card, bool isAtout)
+        {
+            return isAtout ? scoreAtoutCards[card.Value] : scoreNormalCards[card.Value];
+        }
         public static Card CardInstance(Color color, Value value)
         {
             Tuple<Color, Value> tuple = Tuple.Create<Color, Value>(color, value);
