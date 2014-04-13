@@ -8,38 +8,48 @@ namespace Chibre_Server.Game
 {
     class Score
     {
+        private int one;
+        private int twenty;
+        private int fifty;
+        private int hundred;
+
         public Score()
         {
-            this.One = this.Twenty = this.Fifty = this.Hundred = 0;
+            this.one = this.twenty = this.fifty = this.hundred = 0;
         }
 
         public int Twenty
         {
-            private set;
-            get;
+            get { return twenty; }
         }
 
         public int Fifty
         {
-            private set;
-            get;
+            get { return fifty; }
         }
 
         public int Hundred
         {
-            private set;
-            get;
+            get { return hundred; }
         }
 
         public int One
         {
-            private set;
-            get;
+            get { return one; }
         }
 
         public void AddPoints(int points)
         {
-            // TODO
+            hundred += points / 100;
+            points -= points / 100;
+
+            fifty += points / 50;
+            points -= points / 50;
+
+            twenty += points / 20;
+            points -= points / 20;
+
+            one += points;
         }
     }
 }
