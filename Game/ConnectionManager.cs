@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chibre_Server.Game;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -54,29 +55,13 @@ namespace Chibre_Server
             _acceptConnections = value;
         }
 
-        public async void ReceiveLoop()
-        {
-            if (_receiveData == true)
-                return;
-
-            _receiveData = true;
-            while(_receiveData)
-            {
-                DataReader reader = new DataReader(socket.InputStream);
-                // Set inputstream options so that we don't have to know the data size
-                reader.InputStreamOptions = InputStreamOptions.Partial;
-                var data = await reader.LoadAsync(reader.UnconsumedBufferLength);
-                Debug.WriteLine(data.GetType());
-                
-            }
-        }
-
         void OnConnectionReceived(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
         {
             Debug.WriteLine("Someone connected");
 
-            socket = args.Socket;
-            ReceiveLoop();
+            StreamSocket socket = args.Socket;
+            Connection connection = new Connection(socket);
+            connection.IsReceiving = true;
         }
     }
 }

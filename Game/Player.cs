@@ -16,8 +16,12 @@ namespace Chibre_Server.Game
         {
             this.Id = id;
             this.Team = team;
-            this.connection = connection;
             this.cards = new HashSet<Card>();
+        }
+
+        public void SetConnection(ref Connection connection)
+        {
+            this.connection = connection;
         }
 
         public Team Team

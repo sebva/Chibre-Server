@@ -46,6 +46,5 @@
             <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
-        <ListBox x:Name="lbx" HorizontalAlignment="Left" Height="228" Margin="309,134,0,0" Grid.Row="1" VerticalAlignment="Top" Width="376"/>
     </Grid>
 </Page>
