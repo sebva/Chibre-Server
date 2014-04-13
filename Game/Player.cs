@@ -11,14 +11,31 @@ namespace Chibre_Server.Game
     class Player
     {
         private Connection connection;
-        private HashSet<Card> cards;
+        private SortedSet<Card> cards;
+
+        private class CardComparer : IComparer<Card>
+        {
+            public int Compare(Card c1, Card c2)
+            {
+                if (c1.Color < c2.Color)
+                    return -1;
+                else if (c1.Color > c2.Color)
+                    return 1;
+                else if (c1.Value < c2.Value)
+                    return -1;
+                else if (c1.Value > c2.Value)
+                    return 1;
+                else
+                    return 0;
+            }
+        }
 
         public Player(int id, ref Team team, ref Connection connection)
         {
             this.Id = id;
             this.Team = team;
             this.connection = connection;
-            this.cards = new HashSet<Card>();
+            this.cards = new SortedSet<Card>(new CardComparer());
         }
 
         public Team Team
@@ -27,7 +44,7 @@ namespace Chibre_Server.Game
             get;
         }
 
-        public HashSet<Card> Cards
+        public SortedSet<Card> Cards
         {
             get
             {
@@ -46,7 +63,7 @@ namespace Chibre_Server.Game
 
         }
 
-        public void addCard(Card card)
+        public void AddCard(Card card)
         {
             Debug.Assert(cards.Count <= 9);
             cards.Add(card);
