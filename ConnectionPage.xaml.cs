@@ -1,11 +1,14 @@
 ﻿using Chibre_Server.Common;
+using Chibre_Server.Game;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -21,9 +24,8 @@ namespace Chibre_Server
     /// <summary>
     /// Page de base qui inclut des caractéristiques communes à la plupart des applications.
     /// </summary>
-    public sealed partial class ConnectionPage : Page
+    public sealed partial class ConnectionPage : Page, ConnectionManager.ClientConnectionListener
     {
-
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
@@ -52,7 +54,41 @@ namespace Chibre_Server
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
 
-            ConnectionManager.Instance.SetAcceptConnections(true);
+            ConnectionManager cm = ConnectionManager.Instance;
+            cm.ClientListener = this;
+            cm.SetAcceptConnections(true);
+        }
+
+        public void OnClientConnected(int number)
+        {
+            TextBlock playerText;
+            switch(number)
+            {
+                case 1:
+                    playerText = Player1_Label;
+                    break;
+                case 2:
+                    playerText = Player2_Label;
+                    break;
+                case 3:
+                    playerText = Player3_Label;
+                    break;
+                default:
+                case 4:
+                    playerText = Player4_Label;
+                    break;
+            }
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    playerText.Foreground = IP.Foreground;
+
+                    if(number == 4)
+                    {
+                        this.Frame.Navigate(typeof(GamePage));
+                    }
+                });
         }
 
         /// <summary>
@@ -68,6 +104,7 @@ namespace Chibre_Server
         /// antérieure. L'état n'aura pas la valeur Null lors de la première visite de la page.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            this.IP.Text = String.Join("\n", ConnectionManager.GetIPs());
         }
 
         /// <summary>

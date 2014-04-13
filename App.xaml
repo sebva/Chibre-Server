@@ -4,4 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Chibre_Server">
 
+    <Application.Resources>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">C#ibre</x:String>
+    </Application.Resources>
+
 </Application>

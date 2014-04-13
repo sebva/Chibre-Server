@@ -10,11 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
-    </Page.Resources>
-
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
@@ -32,19 +27,29 @@
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
-                        Style="{StaticResource NavigationBackButtonNormalStyle}"
-                        VerticalAlignment="Top"
-                        AutomationProperties.Name="Back"
-                        AutomationProperties.AutomationId="BackButton"
-                        AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
-        </Grid>
+        <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="40,0,30,40"/>
+        <TextBlock x:Name="Player1_Label" Height="80" Width="80" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" TextAlignment="Center" VerticalAlignment="Top" Text="1" FontSize="72" RenderTransformOrigin="0.5,0.5" Foreground="#FF5D5D5D" >
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="180"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock x:Name="Player2_Label" Height="80" Width="80" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" TextAlignment="Center" VerticalAlignment="Bottom" Text="2" FontSize="72" Foreground="#FF5D5D5D" />
+        <TextBlock x:Name="Player3_Label" Height="80" Width="80" HorizontalAlignment="Right" Margin="10,10,0,0" Grid.Row="1" TextAlignment="Center" VerticalAlignment="Bottom" Text="3" FontSize="72" Foreground="#FF5D5D5D" />
+        <TextBlock x:Name="Player4_Label" Height="80" Width="80" HorizontalAlignment="Right" Margin="10,10,0,0" Grid.Row="1" TextAlignment="Center" VerticalAlignment="Top" Text="4" FontSize="72" RenderTransformOrigin="0.5,0.5" Foreground="#FF5D5D5D" >
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="180"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Center" Margin="0,-200,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Veuillez connecter 4 joueurs à :" VerticalAlignment="Center" FontSize="48"/>
+        <TextBlock x:Name="IP" Height="300" HorizontalAlignment="Center" Margin="0,220,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="48" TextAlignment="Center" FontStyle="Italic">
+        	<Run Text="0.0.0.0"/>
+        	<LineBreak/>
+        	<Run Text="0.0.0.0"/>
+        	<LineBreak/>
+        	<Run Text="0.0.0.0"/>
+        	<LineBreak/>
+        	<Run Text="0.0.0.0"/>
+        </TextBlock>
     </Grid>
 </Page>

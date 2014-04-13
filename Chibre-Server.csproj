@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Game\GameEngine.cs" />
     <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Protocol.cs" />
     <Compile Include="Game\Score.cs" />
     <Compile Include="Game\Table.cs" />
     <Compile Include="Game\Team.cs" />

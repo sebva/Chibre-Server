@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Data.Json;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 
@@ -72,7 +76,14 @@ namespace Chibre_Server.Game
 
                 string received = reader.ReadString((uint)payloadLength);
 
-                ProcessData(received);
+                try
+                {
+                    ProcessData(received);
+                }
+                catch(NotImplementedException ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
         }
 
@@ -89,7 +100,36 @@ namespace Chibre_Server.Game
         private void ProcessData(string received)
         {
             Debug.WriteLine("Data received: " + received);
-            SendPayload(received);
+
+            JsonObject jsonRes;
+            bool ok = JsonObject.TryParse(received, out jsonRes);
+            if (ok)
+            {
+                // Rails-like automatic method matching
+                TypeInfo t = typeof(Protocol).GetTypeInfo();
+                string methodName = UnderscoreToCamel(jsonRes.GetNamedString("action"));
+                MethodInfo m = t.GetDeclaredMethod(methodName);
+                if (m != null)
+                    m.Invoke(null, new object[] { jsonRes, player });
+                else
+                    throw new NotImplementedException("The method " + methodName + " does not exist in Protocol.cs");
+            }
+            else
+                Debug.WriteLine("Invalid JSON received");
+        }
+
+        public static string UnderscoreToCamel(string underscore)
+        {
+            StringBuilder result = new StringBuilder(underscore);
+            result[0] = char.ToUpper(result[0]);
+            for (int i = 1; i < result.Length; ++i)
+            {
+                if (result[i - 1] == '_')
+                    result[i] = char.ToUpper(result[i]);
+                else
+                    result[i] = char.ToLower(result[i]);
+            }
+            return result.Replace("_", string.Empty).ToString();
         }
     }
 }
