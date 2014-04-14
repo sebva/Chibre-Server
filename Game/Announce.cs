@@ -8,6 +8,7 @@ namespace Chibre_Server.Game
 {
     class Announce
     {
+        #region Comparer
         /// <summary>
         ///  Sort annouce by power, desc order
         /// </summary>
@@ -30,6 +31,7 @@ namespace Chibre_Server.Game
                     return cardComparer.Compare(a1.HighestCard, a2.HighestCard);
             }
         }
+        #endregion
 
         private AnnounceType announceType;
         private SortedSet<Card> cards;
@@ -75,6 +77,7 @@ namespace Chibre_Server.Game
             power = powerAnnounce[announceType];
         }
 
+        #region Properties
         public Player Player
         {
             get { return player; }
@@ -94,5 +97,6 @@ namespace Chibre_Server.Game
         {
             get { return power; }
         }
+        #endregion
     }
 }
