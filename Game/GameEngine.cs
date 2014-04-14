@@ -114,6 +114,8 @@ namespace Chibre_Server.Game
                     if (announce.Player.Team == announces[0].Player.Team)
                         announce.Player.Team.Score.AddPoints(announce.Score);
             }
+            foreach (Announce announce in announces)
+                Debug.WriteLine("GE Annouce : " + announce.Score + " for player " + announce.Player.Id);
             announces.Clear();
         }
 
@@ -258,11 +260,11 @@ namespace Chibre_Server.Game
             Player winner = null;
             foreach(Pair<Card, int> pair in cardsByPlayer)
                 if(pair.First == card)
-                {
                     winner = players[pair.Second];
-                    break;
-                }
-            winner.Team.Score.AddPoints(ComputePointsTurn(cards));
+
+            int score = ComputePointsTurn(cards);
+            Debug.WriteLine("Score turn : " + score);
+            winner.Team.Score.AddPoints(score);
             table.Clear();
 
             playerTurn = winner.Id;
@@ -283,7 +285,7 @@ namespace Chibre_Server.Game
             }
 
             // If all the cards are atout or someone has maybe cut, return the highest score among the atout card
-            if (atoutCards.Count == cards.Count || atoutCards.Count > 0)
+            if (atoutCards.Count > 0)
                 return MostPowerfulCard(atoutCards, true);
             // We take the first color and get the highest same color cards
             else 
