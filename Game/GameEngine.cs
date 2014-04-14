@@ -69,7 +69,7 @@ namespace Chibre_Server.Game
         {
             this.atout = atout;
             ManageAnnounces();
-            players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(true);
+            players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(false);
             SendCards();
         }
 
