@@ -52,9 +52,11 @@ namespace Chibre_Server.Game
         {
             DistributeCards();
             if (++gameNumber == 1) // The atout is the player with the 7 of diamonds
+            {
                 foreach (KeyValuePair<int, Player> entry in players)
-                    if(entry.Value.Cards.Contains(Card.CardInstance(Color.Carreau, Value.Seven)))
+                    if (entry.Value.Cards.Contains(Card.CardInstance(Color.Carreau, Value.Seven)))
                         atoutPlayer = entry.Key;
+            }
             else
                 atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
             playerTurn = atoutPlayer;
@@ -64,6 +66,7 @@ namespace Chibre_Server.Game
         {
             this.atout = atout;
             ManageAnnounces();
+            players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(true);
             SendCards();
         }
 
@@ -92,6 +95,7 @@ namespace Chibre_Server.Game
             players[(atoutPlayer + teams[0].Length) % players.Count].SendCards(true);
         }
 
+        #region Announce
         private void ManageAnnounces()
         {
             SearchAnnounce();
@@ -149,8 +153,8 @@ namespace Chibre_Server.Game
             for (int i = 0; i <= (cards.Count - serie) && !output; ++i)
             {
                 output = true;
-                for (int j = i; j < i + serie; ++j)
-                    output &= (cards[j + 1].Value - cards[j].Value == 1);
+                for (int j = 0; j < serie-1; ++j)
+                    output &= (cards[i + j + 1].Value - cards[i + j].Value == 1);
             }
             return output;
         }
@@ -203,6 +207,8 @@ namespace Chibre_Server.Game
 
             return announceCards;
         }
+        #endregion
+
         public void AddPlayer(Player player)
         {
             Team team = teams[player.Id % 2];
@@ -231,7 +237,7 @@ namespace Chibre_Server.Game
             task.Wait();
 
             foreach (KeyValuePair<int, Player> pair in players)
-                if (pair.Value.Id != (atoutPlayer + teams[0].Length) % players.Count)
+                if (pair.Value.Id != ((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count))
                     pair.Value.SendCards(pair.Value.Id == atoutPlayer);
         }
 
@@ -252,11 +258,6 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
-
-            if(turnNumber == 9)
-            {
-
-            }
 
             ++turnNumber;
         }
