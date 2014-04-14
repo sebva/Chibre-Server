@@ -74,7 +74,7 @@ namespace Chibre_Server.Game
 
         public void LegalCards(List<Card> cards)
         {
-            Protocol.TimeToPlay(connection, cards, GameEngine.Instance.Atout);
+            Protocol.TimeToPlay(connection, cards);
         }
 
         #region Properties

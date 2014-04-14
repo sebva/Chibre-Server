@@ -18,8 +18,6 @@ namespace Chibre_Server
         private static ConnectionManager instance = null;
         private bool _acceptConnections;
         private StreamSocketListener _socketListener;
-        private bool _receiveData = false;
-        private StreamSocket socket;
         private HashSet<Guid> clients;
 
         public interface ClientConnectionListener
