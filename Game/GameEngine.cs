@@ -125,7 +125,7 @@ namespace Chibre_Server.Game
                     cards.RemoveAt(cards.Count-1);
                 }
 
-            Task task = Task.Delay(200);
+            Task task = Task.Delay(600);
             task.Wait();
 
             foreach (KeyValuePair<int, Player> pair in players)

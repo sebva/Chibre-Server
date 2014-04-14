@@ -89,6 +89,7 @@ namespace Chibre_Server.Game
         public static void TimeToPlay(Connection connection, List<Card> possibleCards)
         {
             JsonObject timeToPlay = new JsonObject();
+            timeToPlay.SetNamedValue("action", JsonValue.CreateStringValue("time_to_play"));
             JsonArray possibleCardsJson = new JsonArray();
             foreach(Card card in possibleCards)
             {
