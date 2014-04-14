@@ -92,6 +92,7 @@ namespace Chibre_Server.Game
             players[(atoutPlayer + teams[0].Length) % players.Count].SendCards(true);
         }
 
+        #region Announce
         private void ManageAnnounces()
         {
             SearchAnnounce();
@@ -203,6 +204,8 @@ namespace Chibre_Server.Game
 
             return announceCards;
         }
+        #endregion
+
         public void AddPlayer(Player player)
         {
             Team team = teams[player.Id % 2];
@@ -252,11 +255,6 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
-
-            if(turnNumber == 9)
-            {
-
-            }
 
             ++turnNumber;
         }
