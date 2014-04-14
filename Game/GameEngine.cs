@@ -322,7 +322,6 @@ namespace Chibre_Server.Game
         private List<Card> LegalCards(Player player)
         {
             List<Pair<Card, Object>> legalCards = new List<Pair<Card, Object>>();
-            List<Card> cardsTable = table.Cards;
             foreach (Card card in player.Cards)
                 legalCards.Add(new Pair<Card, Object>(card, false));
 
@@ -367,32 +366,36 @@ namespace Chibre_Server.Game
                             ++count;
                         }
 
-                    // If we don't have any cards of this color, we enable all cards
+                    // If we don't have any cards of this color, we enable all non-atout cards
                     if (count == 0)
                         foreach (Pair<Card, Object> pair in legalCards)
-                            pair.Second = true;
-                    // We enable only the atout cards
-                    else
-                        foreach (Pair<Card, Object> pair in legalCards)
-                            pair.Second = pair.First.Color == atout;
+                            if(pair.First.Color != atout)
+                                pair.Second = true;
 
-                    // If some has cut, we have to find the highest cut card and disable all atout card below its value
+                    // If some has cut, we have to find the highest cut card and enable all higher atout cards
                     List<Card> atoutCards = new List<Card>();
-                    foreach (Card card in cardsTable)
+                    foreach (Card card in table.Cards)
                         if (card.Color == atout)
                             atoutCards.Add(card);
 
-                    // Someone has cut, find the highest card
-                    if(atoutCards.Count > 0)
-                    {
-                        Card.AtoutComparer atoutComparer = new Card.AtoutComparer();
-                        atoutCards.Sort(atoutComparer);
+                    // Someone has cut, find the highest card to enable the correct atout cards
+                    Card.AtoutComparer atoutComparer = new Card.AtoutComparer();
+                    atoutCards.Sort(atoutComparer);
 
-                        // Enable all higher atout cards
+                    // Enable all higher atout cards (or all if nobody has cut)
+                    foreach (Pair<Card, Object> pair in legalCards)
+                        if (pair.First.Color == atout && (atoutCards.Count == 0 || atoutComparer.Compare(pair.First, atoutCards[0]) > 0))
+                            pair.Second = true;
+
+                    // If our last cards are only atout and below the cut card, we have to play with
+                    bool canPlay = true;
+                    foreach (Pair<Card, Object> pair in legalCards)
+                        canPlay |= (bool)pair.Second;
+
+                    if(!canPlay)
                         foreach (Pair<Card, Object> pair in legalCards)
-                            if (pair.First.Color == atout && atoutComparer.Compare(pair.First, atoutCards[0]) > 0)
+                            if (pair.First.Color == atout)
                                 pair.Second = true;
-                    }
                 }
             }
 
