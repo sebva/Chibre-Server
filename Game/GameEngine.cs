@@ -50,7 +50,9 @@ namespace Chibre_Server.Game
 
         public void StartNewTurn()
         {
-            DistributeCards();
+            DistributeCardsLocal();
+            DistributeCardsDevice();
+
             if (++gameNumber == 1) // The atout is the player with the 7 of diamonds
             {
                 foreach (KeyValuePair<int, Player> entry in players)
@@ -168,8 +170,8 @@ namespace Chibre_Server.Game
             for (int i = 0; i <= (cards.Count - serie); ++i)
             {
                 bool output = true;
-                for (int j = i; j < i + serie; ++j)
-                    output &= (cards[j + 1].Value - cards[j].Value == 1);
+                for (int j = 0; j < serie - 1; ++j)
+                    output &= (cards[i + j + 1].Value - cards[i + j].Value == 1);
                 if (output)
                 {
                     List<Card> series = new List<Card>();
@@ -217,7 +219,7 @@ namespace Chibre_Server.Game
             player.Team = team;
         }
 
-        private void DistributeCards()
+        private void DistributeCardsLocal()
         {
             List<Card> cards = new List<Card>();
             foreach (Value value in (Value[])Enum.GetValues(typeof(Value)))
@@ -235,7 +237,10 @@ namespace Chibre_Server.Game
 
             Task task = Task.Delay(600);
             task.Wait();
+        }
 
+        private void DistributeCardsDevice()
+        {
             foreach (KeyValuePair<int, Player> pair in players)
                 if (pair.Value.Id != ((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count))
                     pair.Value.SendCards(pair.Value.Id == atoutPlayer);
