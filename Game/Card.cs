@@ -39,11 +39,11 @@ namespace Chibre_Server.Game
 
         #region CardComparer
         /// <summary>
-        /// Sort card by couleur and value, asc order
+        /// Sort card by color and value, asc order
         /// </summary>
         public class CardComparer : IComparer<Card>
         {
-            private static readonly List<Value> values;
+            public static readonly List<Value> values;
             private static readonly List<Color> colors;
 
             static CardComparer()
@@ -74,6 +74,19 @@ namespace Chibre_Server.Game
                     return color;
                 else
                     return -values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
+            }
+        }
+        #endregion
+
+        #region CardValueComparer
+        /// <summary>
+        /// Sort card by value, asc order
+        /// </summary>
+        public class CardValueComparer : IComparer<Card>
+        {
+            public int Compare(Card c1, Card c2)
+            {
+                return -CardComparer.values.IndexOf(c1.Value).CompareTo(CardComparer.values.IndexOf(c2.Value));
             }
         }
         #endregion

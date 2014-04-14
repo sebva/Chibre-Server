@@ -49,11 +49,6 @@ namespace Chibre_Server.Game
             get { return connection; }
         }
 
-        public void Announce(Announce annouce)
-        {
-            team.GameEngine.AddAnnounce(annouce);
-        }
-
         public void AddCard(Card card)
         {
             Debug.Assert(cards.Count <= 9);
@@ -69,7 +64,7 @@ namespace Chibre_Server.Game
         public void PlayCard(Card card)
         {
             cards.Remove(card);
-            team.GameEngine.AddCardTable(card);
+            team.GameEngine.AddCardTable(card, this);
         }
 
         public void LegalCards(List<Card> cards)

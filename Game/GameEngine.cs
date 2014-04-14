@@ -19,7 +19,8 @@ namespace Chibre_Server.Game
         private int gameNumber;
         private int atoutPlayer;
         private int playerTurn;
-
+        private int turnNumber;
+        private int playerTurnNumber;
         private GameEngine()
         {
             teams = new Team[2];
@@ -32,6 +33,8 @@ namespace Chibre_Server.Game
             gameNumber = 0;
             atoutPlayer = 0;
             playerTurn = 0;
+            turnNumber = 0;
+            playerTurnNumber = 0;
         }
 
         public static GameEngine Instance
@@ -60,13 +63,28 @@ namespace Chibre_Server.Game
         public void ChooseAtout(Color atout)
         {
             this.atout = atout;
+            ManageAnnounces();
+            SendCards();
+        }
 
-            for (int i = 0; i < 9; ++i)
+        public void AddCardTable(Card card, Player player)
+        {
+            if (player.Id == playerTurn)
             {
-                if (i == 1)
-                    ManageAnnounces();
-                GameProcess();
+                ++playerTurnNumber;
+                table.AddCard(playerTurn, card);
+                if (playerTurnNumber == 4)
+                {
+                    playerTurnNumber = 0;
+                    FinishTheTurn();
+                }
             }
+        }
+
+        private void SendCards()
+        {
+            players[playerTurn].LegalCards(LegalCards(players[playerTurn]));
+            playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
         }
 
         public void Chibrer()
@@ -76,6 +94,7 @@ namespace Chibre_Server.Game
 
         private void ManageAnnounces()
         {
+            SearchAnnounce();
             if(announces.Count == 1)
                 announces[0].Player.Team.Score.AddPoints(announces[0].Score);
             else if(announces.Count > 1)
@@ -89,24 +108,105 @@ namespace Chibre_Server.Game
             announces.Clear();
         }
 
+        private void SearchAnnounce()
+        {
+            List<Pair<Value, AnnounceType>> sameCards = new List<Pair<Value, AnnounceType>>();
+            sameCards.Add(new Pair<Value, AnnounceType>(Value.As, AnnounceType.HundredSame));
+            sameCards.Add(new Pair<Value, AnnounceType>(Value.Roi, AnnounceType.HundredSame));
+            sameCards.Add(new Pair<Value, AnnounceType>(Value.Dame, AnnounceType.HundredSame));
+            sameCards.Add(new Pair<Value, AnnounceType>(Value.Ten, AnnounceType.HundredSame));
+            sameCards.Add(new Pair<Value, AnnounceType>(Value.Valet, AnnounceType.TwoHundred));
+            sameCards.Add(new Pair<Value, AnnounceType>(Value.Nine, AnnounceType.HundredAndFifty));
+
+            List<Pair<int, AnnounceType>> followCards = new List<Pair<int, AnnounceType>>();
+            followCards.Add(new Pair<int, AnnounceType>(5, AnnounceType.HundredFollow));
+            followCards.Add(new Pair<int, AnnounceType>(4, AnnounceType.Fifty));
+            followCards.Add(new Pair<int, AnnounceType>(3, AnnounceType.Twenty));
+
+            foreach(KeyValuePair<int, Player> pair in players)
+            {
+                SortedSet<Card> cards = new SortedSet<Card>(pair.Value.Cards);
+
+                foreach(Pair<Value, AnnounceType> pair2 in sameCards)
+                    if(FindSameCards(cards, pair2.First))
+                        announces.Add(new Announce(pair2.Second, pair.Value, RemoveSameCard(ref cards, pair2.First)));
+                 
+                foreach(Pair<int, AnnounceType> pair2 in followCards)
+                    if(FindFollowCards(cards, pair2.First))
+                        foreach(List<Card> listCards in RemoveFollowCards(ref cards, pair2.First))
+                            announces.Add(new Announce(pair2.Second, pair.Value, listCards));
+            }
+        }
+
+        private bool FindFollowCards(SortedSet<Card> cardsOriginal, int serie)
+        {
+            List<Card> cards = new List<Card>(new SortedSet<Card>(cardsOriginal, new Card.CardValueComparer()));
+            Debug.Assert(cardsOriginal.Count == 9);
+
+            bool output = false;
+            for (int i = 0; i <= (cards.Count - serie) && !output; ++i)
+            {
+                output = true;
+                for (int j = i; j < i + serie; ++j)
+                    output &= (cards[j + 1].Value - cards[j].Value == 1);
+            }
+            return output;
+        }
+
+        private List<List<Card>> RemoveFollowCards(ref SortedSet<Card> cardsOriginal, int serie)
+        {
+            List<Card> cards = new List<Card>(new SortedSet<Card>(cardsOriginal, new Card.CardValueComparer()));
+            Debug.Assert(cardsOriginal.Count == 9);
+
+            List<List<Card>> followCards = new List<List<Card>>();
+            for (int i = 0; i <= (cards.Count - serie); ++i)
+            {
+                bool output = true;
+                for (int j = i; j < i + serie; ++j)
+                    output &= (cards[j + 1].Value - cards[j].Value == 1);
+                if (output)
+                {
+                    List<Card> series = new List<Card>();
+                    for (int j = i; j < i + serie; ++j)
+                    {
+                        series.Add(cards[j]);
+                        cardsOriginal.Remove(cards[j]);
+                    }
+                }
+            }
+            return followCards;
+        }
+
+        private bool FindSameCards(SortedSet<Card> cards, Value value)
+        {
+            int count = 0;
+            foreach (Card card in cards)
+                if (card.Value == value)
+                    ++count;
+            return count == 4;
+        }
+
+        private List<Card> RemoveSameCard(ref SortedSet<Card> cards, Value value)
+        {
+            List<Card> announceCards = new List<Card>();
+            announceCards.Add(Card.CardInstance(Color.Pique, value));
+            announceCards.Add(Card.CardInstance(Color.Coeur, value));
+            announceCards.Add(Card.CardInstance(Color.Carreau, value));
+            announceCards.Add(Card.CardInstance(Color.Trefle, value));
+
+            cards.Remove(Card.CardInstance(Color.Pique, value));
+            cards.Remove(Card.CardInstance(Color.Coeur, value));
+            cards.Remove(Card.CardInstance(Color.Carreau, value));
+            cards.Remove(Card.CardInstance(Color.Trefle, value));
+
+            return announceCards;
+        }
         public void AddPlayer(Player player)
         {
             Team team = teams[player.Id % 2];
             team.addPlayer(player);
             players.Add(player.Id, player);
             player.Team = team;
-        }
-
-        public void AddCardTable(Card card)
-        {
-            table.AddCard(playerTurn, card);
-            playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
-            //TODO : Sync with GameProcess
-        }
-
-        public void AddAnnounce(Announce annouce)
-        {
-            announces.Add(annouce);
         }
 
         private void DistributeCards()
@@ -133,16 +233,6 @@ namespace Chibre_Server.Game
                     pair.Value.SendCards(pair.Value.Id == atoutPlayer);
         }
 
-        private void GameProcess()
-        {
-            for(int i = 0; i < 4; ++i)
-            {
-                players[i].LegalCards(LegalCards(players[i]));
-                // TODO : Sync with AddCardTable
-            }
-            FinishTheTurn();
-        }
-
         private void FinishTheTurn()
         {
             List<Card> cards = table.Cards;
@@ -160,6 +250,13 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
+
+            if(turnNumber == 9)
+            {
+
+            }
+
+            ++turnNumber;
         }
 
         private Card WhichCardDoesWin(List<Card> cards)
