@@ -68,7 +68,7 @@ namespace Chibre_Server.Game
 
             public int Compare(Card c1, Card c2)
             {
-                int color = -colors.IndexOf(c1.Color).CompareTo(colors.IndexOf(c2.Color));
+                int color = colors.IndexOf(c1.Color).CompareTo(colors.IndexOf(c2.Color));
 
                 if (color != 0)
                     return color;

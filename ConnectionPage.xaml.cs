@@ -87,6 +87,7 @@ namespace Chibre_Server
                     if(number == 4)
                     {
                         this.Frame.Navigate(typeof(GamePage));
+                        GameEngine.Instance.StartNewTurn();
                     }
                 });
         }

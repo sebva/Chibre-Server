@@ -19,7 +19,7 @@ namespace Chibre_Server.Game
             bool ok = Guid.TryParse(uuid, out guid);
             if (ok)
             {
-                int playerId = ConnectionManager.Instance.OnHelloReceived(guid);
+                int playerId = ConnectionManager.Instance.OnHelloReceived(guid, connection);
                 if(playerId != -1)
                 {
                     HelloReply(connection, playerId);
@@ -34,39 +34,19 @@ namespace Chibre_Server.Game
             string color = data.GetNamedString("color");
             if(color == "chibre")
             {
-                connection.Player.ChooseAtoutChiber();
+                connection.Player.ChooseAtoutChibrer();
             }
             else
             {
-                Color atout = (Color)Enum.Parse(typeof(Color), color);
+                StringBuilder colorBuilder = new StringBuilder(color);
+                colorBuilder[0] = char.ToUpper(colorBuilder[0]);
+                Color atout = (Color)Enum.Parse(typeof(Color), colorBuilder.ToString());
                 connection.Player.ChooseAtout(atout);
             }
         }
 
         public static void PlayCard(JsonObject data, Connection connection)
         {
-            if (data.ContainsKey("announces"))
-            {
-                JsonArray announces = data.GetNamedArray("announces");
-                foreach (JsonObject announce in announces)
-                {
-                    StringBuilder typeBuilder = new StringBuilder(announce.GetNamedString("type"));
-                    typeBuilder[0] = char.ToUpper(typeBuilder[0]);
-                    AnnounceType type = (AnnounceType) Enum.Parse(typeof(AnnounceType), typeBuilder.ToString());
-
-                    List<Card> listCards = new List<Card>();
-                    JsonArray cards = announce.GetNamedArray("cards");
-                    foreach(JsonObject card in cards)
-                    {
-                        Card cardObject = JsonObjectToCard(card);
-                        listCards.Add(cardObject);
-                    }
-
-                    Announce announceObject = new Announce(type, connection.Player, listCards);
-                    connection.Player.Announce(announceObject);
-                }
-            }
-
             Card playedCard = JsonObjectToCard(data.GetNamedObject("card"));
             connection.Player.PlayCard(playedCard);
         }
@@ -91,10 +71,11 @@ namespace Chibre_Server.Game
             connection.SendPayload(refusal.Stringify());
         }
 
-        public static void Distribution(Connection connection, bool atout, Card[] cards)
+        public static void Distribution(Connection connection, bool atout, List<Card> cards)
         {
             JsonObject distribution = new JsonObject();
             distribution.SetNamedValue("action", JsonValue.CreateStringValue("distribution"));
+            distribution.SetNamedValue("atout", JsonValue.CreateBooleanValue(atout));
             JsonArray cardsJson = new JsonArray();
             foreach(Card card in cards)
             {
@@ -105,10 +86,9 @@ namespace Chibre_Server.Game
             connection.SendPayload(distribution.Stringify());
         }
 
-        public static void TimeToPlay(Connection connection, Card[] possibleCards, Color atout)
+        public static void TimeToPlay(Connection connection, List<Card> possibleCards)
         {
             JsonObject timeToPlay = new JsonObject();
-            timeToPlay.SetNamedValue("atout", JsonValue.CreateStringValue(atout.ToString().ToLower()));
             JsonArray possibleCardsJson = new JsonArray();
             foreach(Card card in possibleCards)
             {

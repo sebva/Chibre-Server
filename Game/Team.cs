@@ -22,7 +22,6 @@ namespace Chibre_Server.Game
 
         public void addPlayer(Player player)
         {
-            Debug.Assert(players.Length < 2);
             players[players.Length - 1] = player;
         }
 

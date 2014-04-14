@@ -20,22 +20,16 @@ namespace Chibre_Server.Game
         /// </summary>
         /// <param name="list">List to shuffle</param>
         /// <returns>Shuffled list</returns>
-        public static void Shuffle<T>(List<T> list)
+        public static void Shuffle<T>(ref List<T> list)
         {
             for (int i = 0; i < list.Count; ++i)
             {
-                T a = list[i];
-                T b = list[random.Next(i, list.Count - 1)];
-                Swap<T>(ref a, ref b);
+                int a = i;
+                int b = random.Next(i, list.Count - 1);
+                T temp = list[a];
+                list[a] = list[b];
+                list[b] = temp;
             }
-        }
-    
-        public static void Swap<T>(ref T lhs, ref T rhs)
-        {
-            T temp;
-            temp = lhs;
-            lhs = rhs;
-            rhs = temp;
         }
     }
 }

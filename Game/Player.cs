@@ -10,18 +10,18 @@ namespace Chibre_Server.Game
 {
     class Player
     {
+        public delegate void AtoutChoosen();
+
         private Connection connection;
         private SortedSet<Card> cards;
         private Team team;
         private int id;
 
-        public Player(int id, ref Team team, ref Connection connection)
+        public Player(int id, ref Connection connection)
         {
             this.id = id;
-            this.team = team;
             this.connection = connection;
             this.cards = new SortedSet<Card>(new Card.CardComparer());
-            this.team.GameEngine.AddPlayer(this);
         }
 
         /// <summary>
@@ -33,10 +33,15 @@ namespace Chibre_Server.Game
             team.GameEngine.ChooseAtout(atout);
         }
 
-        public void ChooseAtoutChiber()
+        public AtoutChoosen AtoutChoosenDelegate
         {
-            //TODO : Choose atout;
-            //team.GameEngine.ChooseAtout(...);
+            get;
+            set;
+        }
+
+        public void ChooseAtoutChibrer()
+        {
+            team.GameEngine.Chibrer();
         }
 
         public Connection Connection
@@ -48,7 +53,12 @@ namespace Chibre_Server.Game
         {
             Debug.Assert(cards.Count <= 9);
             cards.Add(card);
-            //TODO : Send to the device
+        }
+
+        public void SendCards(bool shouldChooseAtout)
+        {
+            Debug.WriteLine("Sending cards to device");
+            Protocol.Distribution(connection, shouldChooseAtout, new List<Card>(cards));
         }
 
         public void PlayCard(Card card)
@@ -59,7 +69,7 @@ namespace Chibre_Server.Game
 
         public void LegalCards(List<Card> cards)
         {
-            //TODO : Send to the device
+            Protocol.TimeToPlay(connection, cards);
         }
 
         #region Properties
@@ -67,6 +77,7 @@ namespace Chibre_Server.Game
         public Team Team
         {
             get { return team; }
+            set { team = value; }
         }
 
         public SortedSet<Card> Cards

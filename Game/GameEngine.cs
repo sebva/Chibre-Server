@@ -9,7 +9,7 @@ namespace Chibre_Server.Game
 {
     class GameEngine
     {
-        private GameEngine instance = null;
+        private static GameEngine instance = null;
         private Table table;
         private Team[] teams;
         private Dictionary<int, Player> players;
@@ -34,7 +34,7 @@ namespace Chibre_Server.Game
             playerTurn = 0;
         }
 
-        public GameEngine Instance
+        public static GameEngine Instance
         {
             get
             {
@@ -55,8 +55,11 @@ namespace Chibre_Server.Game
             else
                 atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
             playerTurn = atoutPlayer;
+        }
 
-            ChooseAtout();
+        public void ChooseAtout(Color atout)
+        {
+            this.atout = atout;
 
             for (int i = 0; i < 9; ++i)
             {
@@ -66,18 +69,9 @@ namespace Chibre_Server.Game
             }
         }
 
-        private void ChooseAtout()
+        public void Chibrer()
         {
-            //players[atoutPlayer].ChooseAtout();
-            //TODO Wait until an answer of player
-
-            players[(atoutPlayer + 2) % players.Count].ChooseAtoutChiber();
-            //TODO Wait unti the player has chosen the atout
-        }
-
-        public void ChooseAtout(Color atout)
-        {
-            this.atout = atout;
+            players[(atoutPlayer + teams[0].Length) % players.Count].SendCards(true);
         }
 
         private void ManageAnnounces()
@@ -194,6 +188,7 @@ namespace Chibre_Server.Game
             Team team = teams[player.Id % 2];
             team.addPlayer(player);
             players.Add(player.Id, player);
+            player.Team = team;
         }
 
         public void AddCardTable(Card card)
@@ -209,15 +204,22 @@ namespace Chibre_Server.Game
             foreach (Value value in (Value[])Enum.GetValues(typeof(Value)))
                 foreach (Color color in (Color[])Enum.GetValues(typeof(Color)))
                     cards.Add(Card.CardInstance(color, value));
-            Utils.Shuffle(cards);
+            Utils.Shuffle(ref cards);
 
-            int n = cards.Count;
+            int n = cards.Count / 4;
             for(int i = 0; i < n; ++i)
                 foreach (KeyValuePair<int, Player> entry in players)
-                    {
-                        entry.Value.AddCard(cards.Last());
-                        cards.RemoveAt(cards.Count-1);
-                    }
+                {
+                    entry.Value.AddCard(cards.Last());
+                    cards.RemoveAt(cards.Count-1);
+                }
+
+            Task task = Task.Delay(200);
+            task.Wait();
+
+            foreach (KeyValuePair<int, Player> pair in players)
+                if (pair.Value.Id != (atoutPlayer + teams[0].Length) % players.Count)
+                    pair.Value.SendCards(pair.Value.Id == atoutPlayer);
         }
 
         private void GameProcess()
@@ -379,5 +381,19 @@ namespace Chibre_Server.Game
 
             return output;
         }
+
+        #region Properties
+
+        public Color Atout
+        {
+            get { return atout; }
+        }
+
+        public int AtoutPlayerId
+        {
+            get { return atoutPlayer; }
+        }
+
+        #endregion
     }
 }
