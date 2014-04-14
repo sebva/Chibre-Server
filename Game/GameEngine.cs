@@ -123,9 +123,11 @@ namespace Chibre_Server.Game
             followCards.Add(new Pair<int, AnnounceType>(4, AnnounceType.Fifty));
             followCards.Add(new Pair<int, AnnounceType>(3, AnnounceType.Twenty));
 
+            IComparer<Card> comparer = new Card.CardValueComparer();
+
             foreach(KeyValuePair<int, Player> pair in players)
             {
-                SortedSet<Card> cards = new SortedSet<Card>(pair.Value.Cards);
+                SortedSet<Card> cards = new SortedSet<Card>(pair.Value.Cards, comparer);
 
                 foreach(Pair<Value, AnnounceType> pair2 in sameCards)
                     if(FindSameCards(cards, pair2.First))
@@ -140,7 +142,7 @@ namespace Chibre_Server.Game
 
         private bool FindFollowCards(SortedSet<Card> cardsOriginal, int serie)
         {
-            List<Card> cards = new List<Card>(new SortedSet<Card>(cardsOriginal, new Card.CardValueComparer()));
+            List<Card> cards = new List<Card>(cardsOriginal);
             Debug.Assert(cardsOriginal.Count == 9);
 
             bool output = false;
@@ -155,7 +157,7 @@ namespace Chibre_Server.Game
 
         private List<List<Card>> RemoveFollowCards(ref SortedSet<Card> cardsOriginal, int serie)
         {
-            List<Card> cards = new List<Card>(new SortedSet<Card>(cardsOriginal, new Card.CardValueComparer()));
+            List<Card> cards = new List<Card>(cardsOriginal);
             Debug.Assert(cardsOriginal.Count == 9);
 
             List<List<Card>> followCards = new List<List<Card>>();
