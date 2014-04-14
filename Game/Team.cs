@@ -9,26 +9,26 @@ namespace Chibre_Server.Game
 {
     class Team
     {
-        private Player[] players;
+        private List<Player> players;
         private Score score;
         private GameEngine gameEngine;
 
         public Team(GameEngine gameEngine)
         {
             score = new Score();
-            players = new Player[2];
+            players = new List<Player>(2);
             this.gameEngine = gameEngine;
         }
 
         public void addPlayer(Player player)
         {
-            players[players.Length - 1] = player;
+            players.Add(player);
         }
 
         #region Properties
         public int Length
         {
-            get { return players.Length; }
+            get { return players.Count; }
         }
 
         public Score Score
