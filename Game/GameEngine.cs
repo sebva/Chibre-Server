@@ -50,6 +50,7 @@ namespace Chibre_Server.Game
 
         public void StartNewTurn()
         {
+            turnNumber = 0;
             DistributeCardsLocal();
 
             if (++gameNumber == 1) // The atout is the player with the 7 of diamonds
@@ -268,8 +269,10 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
-            ++turnNumber;
-            SendCards();
+            if(++turnNumber < 9)
+                SendCards();
+            else
+                StartNewTurn();
         }
 
         private Card WhichCardDoesWin(List<Card> cards)
@@ -332,7 +335,7 @@ namespace Chibre_Server.Game
             else
             {
                 bool areAllCardsAtout = true;
-                foreach (Card card in cardsTable)
+                foreach (Card card in table.Cards)
                     areAllCardsAtout &= card.Color == atout;
 
                 if(areAllCardsAtout)
