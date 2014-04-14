@@ -52,9 +52,11 @@ namespace Chibre_Server.Game
         {
             DistributeCards();
             if (++gameNumber == 1) // The atout is the player with the 7 of diamonds
+            {
                 foreach (KeyValuePair<int, Player> entry in players)
-                    if(entry.Value.Cards.Contains(Card.CardInstance(Color.Carreau, Value.Seven)))
+                    if (entry.Value.Cards.Contains(Card.CardInstance(Color.Carreau, Value.Seven)))
                         atoutPlayer = entry.Key;
+            }
             else
                 atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
             playerTurn = atoutPlayer;
@@ -64,6 +66,7 @@ namespace Chibre_Server.Game
         {
             this.atout = atout;
             ManageAnnounces();
+            players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(true);
             SendCards();
         }
 
@@ -234,7 +237,7 @@ namespace Chibre_Server.Game
             task.Wait();
 
             foreach (KeyValuePair<int, Player> pair in players)
-                if (pair.Value.Id != (atoutPlayer + teams[0].Length) % players.Count)
+                if (pair.Value.Id != ((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count))
                     pair.Value.SendCards(pair.Value.Id == atoutPlayer);
         }
 
