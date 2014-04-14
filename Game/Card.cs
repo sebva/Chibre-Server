@@ -10,7 +10,7 @@ namespace Chibre_Server.Game
     {
         #region AtoutComparer
         /// <summary>
-        /// Sort atout cards by power, asc order
+        /// Sort atout cards by power, desc order
         /// </summary>
         public class AtoutComparer : IComparer<Card>
         {
@@ -32,7 +32,7 @@ namespace Chibre_Server.Game
 
             public int Compare(Card c1, Card c2)
             {
-                return -values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
+                return values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
             }
         }
         #endregion

@@ -321,14 +321,14 @@ namespace Chibre_Server.Game
 
         private List<Card> LegalCards(Player player)
         {
-            List<Pair<Card, bool>> legalCards = new List<Pair<Card, bool>>();
+            List<Pair<Card, Object>> legalCards = new List<Pair<Card, Object>>();
             List<Card> cardsTable = table.Cards;
             foreach (Card card in player.Cards)
-                legalCards.Add(new Pair<Card, bool>(card, false));
+                legalCards.Add(new Pair<Card, Object>(card, false));
 
             // The player is the first player
             if (table.Length == 0)
-                foreach (Pair<Card, bool> pair in legalCards)
+                foreach (Pair<Card, Object> pair in legalCards)
                     pair.Second = true;
             else
             {
@@ -341,7 +341,7 @@ namespace Chibre_Server.Game
                     int count = 0;
                     Card card = null;
                     // Enable all atout cards
-                    foreach (Pair<Card, bool> pair in legalCards)
+                    foreach (Pair<Card, Object> pair in legalCards)
                         if (pair.First.Color == atout)
                         {
                             pair.Second = true;
@@ -351,7 +351,7 @@ namespace Chibre_Server.Game
 
                     // If we have only the buur, we can bluff or if we don't have any atout, we can use all the cards
                     if (count == 0 || count == 1 && card.Value == Value.Valet)
-                        foreach (Pair<Card, bool> pair in legalCards)
+                        foreach (Pair<Card, Object> pair in legalCards)
                             pair.Second = true;
                 }
                 else
@@ -360,7 +360,7 @@ namespace Chibre_Server.Game
 
                     int count = 0;
                     // Enable all same color cards
-                    foreach (Pair<Card, bool> pair in legalCards)
+                    foreach (Pair<Card, Object> pair in legalCards)
                         if(pair.First.Color == color)
                         {
                             pair.Second = true;
@@ -369,11 +369,11 @@ namespace Chibre_Server.Game
 
                     // If we don't have any cards of this color, we enable all cards
                     if (count == 0)
-                        foreach (Pair<Card, bool> pair in legalCards)
+                        foreach (Pair<Card, Object> pair in legalCards)
                             pair.Second = true;
                     // We enable only the atout cards
-                    else 
-                        foreach (Pair<Card, bool> pair in legalCards)
+                    else
+                        foreach (Pair<Card, Object> pair in legalCards)
                             pair.Second = pair.First.Color == atout;
 
                     // If some has cut, we have to find the highest cut card and disable all atout card below its value
@@ -388,7 +388,8 @@ namespace Chibre_Server.Game
                         Card.AtoutComparer atoutComparer = new Card.AtoutComparer();
                         atoutCards.Sort(atoutComparer);
 
-                        foreach (Pair<Card, bool> pair in legalCards)
+                        // Enable all higher atout cards
+                        foreach (Pair<Card, Object> pair in legalCards)
                             if (pair.First.Color == atout && atoutComparer.Compare(pair.First, atoutCards[0]) > 0)
                                 pair.Second = true;
                     }
@@ -396,8 +397,8 @@ namespace Chibre_Server.Game
             }
 
             List<Card> output = new List<Card>();
-            foreach (Pair<Card, bool> pair in legalCards)
-                if (pair.Second)
+            foreach (Pair<Card, Object> pair in legalCards)
+                if (((bool)pair.Second))
                     output.Add(pair.First);
 
             return output;
