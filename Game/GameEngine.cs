@@ -51,7 +51,6 @@ namespace Chibre_Server.Game
         public void StartNewTurn()
         {
             DistributeCardsLocal();
-            DistributeCardsDevice();
 
             if (++gameNumber == 1) // The atout is the player with the 7 of diamonds
             {
@@ -62,6 +61,8 @@ namespace Chibre_Server.Game
             else
                 atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
             playerTurn = atoutPlayer;
+
+            DistributeCardsDevice();
         }
 
         public void ChooseAtout(Color atout)
@@ -77,19 +78,21 @@ namespace Chibre_Server.Game
             if (player.Id == playerTurn)
             {
                 ++playerTurnNumber;
+                playerTurn = (playerTurn + 1) % players.Count();
                 table.AddCard(playerTurn, card);
                 if (playerTurnNumber == 4)
                 {
                     playerTurnNumber = 0;
                     FinishTheTurn();
                 }
+                else
+                    SendCards();
             }
         }
 
         private void SendCards()
         {
             players[playerTurn].LegalCards(LegalCards(players[playerTurn]));
-            playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
         }
 
         public void Chibrer()
