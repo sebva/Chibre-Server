@@ -24,26 +24,6 @@ namespace Chibre_Server.Game
             categories.Add(new Pair<Object, int>(one, 1));
         }
 
-        public int Twenty
-        {
-            get { return twenty; }
-        }
-
-        public int Fifty
-        {
-            get { return fifty; }
-        }
-
-        public int Hundred
-        {
-            get { return hundred; }
-        }
-
-        public int One
-        {
-            get { return one; }
-        }
-
         public void AddPoints(int points)
         {
             Addition(points);
@@ -76,5 +56,27 @@ namespace Chibre_Server.Game
                 categories[i - 1].First = nextItem;
             }
         }
+
+        #region Properties
+        public int Twenty
+        {
+            get { return twenty; }
+        }
+
+        public int Fifty
+        {
+            get { return fifty; }
+        }
+
+        public int Hundred
+        {
+            get { return hundred; }
+        }
+
+        public int One
+        {
+            get { return one; }
+        }
+        #endregion
     }
 }

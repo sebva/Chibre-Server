@@ -26,6 +26,7 @@ namespace Chibre_Server.Game
             players[players.Length - 1] = player;
         }
 
+        #region Properties
         public int Length
         {
             get { return players.Length; }
@@ -45,5 +46,6 @@ namespace Chibre_Server.Game
         {
             get { return gameEngine; }
         }
+        #endregion
     }
 }

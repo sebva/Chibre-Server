@@ -8,8 +8,9 @@ namespace Chibre_Server.Game
 {
     class Card
     {
+        #region AtoutComparer
         /// <summary>
-        /// Asc Order
+        /// Sort atout cards by power, asc order
         /// </summary>
         public class AtoutComparer : IComparer<Card>
         {
@@ -34,8 +35,11 @@ namespace Chibre_Server.Game
                 return -values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
             }
         }
+        #endregion
+
+        #region CardComparer
         /// <summary>
-        /// Asc Order
+        /// Sort card by couleur and value, asc order
         /// </summary>
         public class CardComparer : IComparer<Card>
         {
@@ -72,6 +76,7 @@ namespace Chibre_Server.Game
                     return -values.IndexOf(c1.Value).CompareTo(values.IndexOf(c2.Value));
             }
         }
+        #endregion
 
         /// <summary>
         /// MultiSeton (Singleton Idiom)
@@ -165,6 +170,7 @@ namespace Chibre_Server.Game
             this.value = value;
         }
 
+        #region Properties
         public Color Color
         {
             get { return color; }
@@ -174,5 +180,6 @@ namespace Chibre_Server.Game
         {
             get { return value; }
         }
+        #endregion
     }
 }

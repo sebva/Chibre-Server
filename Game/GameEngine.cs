@@ -168,7 +168,7 @@ namespace Chibre_Server.Game
             {
                 if (card.Color == atout)
                     atoutCards.Add(card);
-                if(card.Color == cards[0].Color)
+                if (card.Color == cards[0].Color)
                     colorCards.Add(card);
             }
 

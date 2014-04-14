@@ -8,7 +8,10 @@ namespace Chibre_Server.Game
 {
     class Announce
     {
-        // Desc Order
+        #region Comparer
+        /// <summary>
+        ///  Sort annouce by power, desc order
+        /// </summary>
         public class AnnounceComparable : IComparer<Announce>
         {
             private static Card.CardComparer cardComparer;
@@ -28,6 +31,7 @@ namespace Chibre_Server.Game
                     return cardComparer.Compare(a1.HighestCard, a2.HighestCard);
             }
         }
+        #endregion
 
         private AnnounceType announceType;
         private SortedSet<Card> cards;
@@ -35,7 +39,14 @@ namespace Chibre_Server.Game
         private int score;
         private int power;
 
+        /// <summary>
+        /// Score for each type of announce
+        /// </summary>
         private static readonly Dictionary<AnnounceType, int> scoreAnnouce;
+
+        /// <summary>
+        /// Power of an annouce. Highest score is the most powerful
+        /// </summary>
         private static readonly Dictionary<AnnounceType, int> powerAnnounce;
 
         static Announce()
@@ -66,6 +77,7 @@ namespace Chibre_Server.Game
             power = powerAnnounce[announceType];
         }
 
+        #region Properties
         public Player Player
         {
             get { return player; }
@@ -85,5 +97,6 @@ namespace Chibre_Server.Game
         {
             get { return power; }
         }
+        #endregion
     }
 }

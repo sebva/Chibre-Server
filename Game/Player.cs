@@ -39,24 +39,9 @@ namespace Chibre_Server.Game
             //team.GameEngine.ChooseAtout(...);
         }
 
-        public Team Team
-        {
-            get { return team; }
-        }
-
         public Connection Connection
         {
             get { return connection; }
-        }
-
-        public SortedSet<Card> Cards
-        {
-            get { return this.cards; }
-        }
-
-        public int Id
-        {
-            get { return id; }
         }
 
         public void Announce(Announce annouce)
@@ -69,6 +54,7 @@ namespace Chibre_Server.Game
         {
             Debug.Assert(cards.Count <= 9);
             cards.Add(card);
+            //TODO : Send to the device
         }
 
         public void PlayCard(Card card)
@@ -81,5 +67,23 @@ namespace Chibre_Server.Game
         {
             //TODO : Send to the device
         }
+
+        #region Properties
+
+        public Team Team
+        {
+            get { return team; }
+        }
+
+        public SortedSet<Card> Cards
+        {
+            get { return this.cards; }
+        }
+
+        public int Id
+        {
+            get { return id; }
+        }
+        #endregion
     }
 }
