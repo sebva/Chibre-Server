@@ -44,12 +44,6 @@ namespace Chibre_Server.Game
             get { return connection; }
         }
 
-        public void Announce(Announce annouce)
-        {
-            team.GameEngine.AddAnnounce(annouce);
-            //TODO : Call this method whith the communication
-        }
-
         public void AddCard(Card card)
         {
             Debug.Assert(cards.Count <= 9);
