@@ -79,12 +79,17 @@ namespace Chibre_Server
             connection.IsReceiving = true;
         }
 
-        public int OnHelloReceived(Guid uuid)
+        public int OnHelloReceived(Guid uuid, Connection connection)
         {
             Debug.WriteLine(uuid.ToString());
             if (clients.Add(uuid))
             {
+                int id = clients.Count -1;
+                Player player = new Player(id, ref connection);
+                connection.Player = player;
+                GameEngine.Instance.AddPlayer(player);
                 ClientListener.OnClientConnected(clients.Count);
+
                 return clients.Count;
             }
             return -1;

@@ -19,7 +19,7 @@ namespace Chibre_Server.Game
             bool ok = Guid.TryParse(uuid, out guid);
             if (ok)
             {
-                int playerId = ConnectionManager.Instance.OnHelloReceived(guid);
+                int playerId = ConnectionManager.Instance.OnHelloReceived(guid, connection);
                 if(playerId != -1)
                 {
                     HelloReply(connection, playerId);
@@ -34,11 +34,13 @@ namespace Chibre_Server.Game
             string color = data.GetNamedString("color");
             if(color == "chibre")
             {
-                connection.Player.ChooseAtoutChiber();
+                connection.Player.ChooseAtoutChibrer();
             }
             else
             {
-                Color atout = (Color)Enum.Parse(typeof(Color), color);
+                StringBuilder colorBuilder = new StringBuilder(color);
+                colorBuilder[0] = char.ToUpper(colorBuilder[0]);
+                Color atout = (Color)Enum.Parse(typeof(Color), colorBuilder.ToString());
                 connection.Player.ChooseAtout(atout);
             }
         }
@@ -91,10 +93,11 @@ namespace Chibre_Server.Game
             connection.SendPayload(refusal.Stringify());
         }
 
-        public static void Distribution(Connection connection, bool atout, Card[] cards)
+        public static void Distribution(Connection connection, bool atout, List<Card> cards)
         {
             JsonObject distribution = new JsonObject();
             distribution.SetNamedValue("action", JsonValue.CreateStringValue("distribution"));
+            distribution.SetNamedValue("atout", JsonValue.CreateBooleanValue(atout));
             JsonArray cardsJson = new JsonArray();
             foreach(Card card in cards)
             {
@@ -105,7 +108,7 @@ namespace Chibre_Server.Game
             connection.SendPayload(distribution.Stringify());
         }
 
-        public static void TimeToPlay(Connection connection, Card[] possibleCards, Color atout)
+        public static void TimeToPlay(Connection connection, List<Card> possibleCards, Color atout)
         {
             JsonObject timeToPlay = new JsonObject();
             timeToPlay.SetNamedValue("atout", JsonValue.CreateStringValue(atout.ToString().ToLower()));
