@@ -41,6 +41,32 @@ namespace Chibre_Server.Game
             //team.GameEngine.ChooseAtout(...);
         }
 
+        public void Announce(Announce annouce)
+        {
+            team.GameEngine.AddAnnounce(annouce);
+            //TODO : Call this method whith the communication
+        }
+
+        public void AddCard(Card card)
+        {
+            Debug.Assert(cards.Count <= 9);
+            cards.Add(card);
+            //TODO : Send to the device
+        }
+
+        public void PlayCard(Card card)
+        {
+            cards.Remove(card);
+            team.GameEngine.AddCardTable(card);
+        }
+
+        public void LegalCards(List<Card> cards)
+        {
+            //TODO : Send to the device
+        }
+
+        #region Properties
+
         public Team Team
         {
             get { return team; }
@@ -55,28 +81,6 @@ namespace Chibre_Server.Game
         {
             get { return id; }
         }
-
-        public void Announce(Announce annouce)
-        {
-            team.GameEngine.AddAnnounce(annouce);
-            //TODO : Call this method whith the communication
-        }
-
-        public void AddCard(Card card)
-        {
-            Debug.Assert(cards.Count <= 9);
-            cards.Add(card);
-        }
-
-        public void PlayCard(Card card)
-        {
-            cards.Remove(card);
-            team.GameEngine.AddCardTable(card);
-        }
-
-        public void LegalCards(List<Card> cards)
-        {
-            //TODO : Send to the device
-        }
+        #endregion
     }
 }

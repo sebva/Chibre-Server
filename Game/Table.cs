@@ -35,6 +35,11 @@ namespace Chibre_Server.Game
             return cards[0].First.Color;
         }
 
+        public void Clear()
+        {
+            cards.Clear();
+        }
+        #region Properties
         public List<Card> Cards
         {
             get 
@@ -46,14 +51,10 @@ namespace Chibre_Server.Game
             }
         }
 
-        public void Clear()
-        {
-            cards.Clear();
-        }
-
         public List<Pair<Card, int>> CardsByPlayer
         {
             get { return cards; }
         }
+        #endregion
     }
 }

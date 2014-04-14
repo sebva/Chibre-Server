@@ -8,7 +8,9 @@ namespace Chibre_Server.Game
 {
     class Announce
     {
-        // Desc Order
+        /// <summary>
+        ///  Sort annouce by power, desc order
+        /// </summary>
         public class AnnounceComparable : IComparer<Announce>
         {
             private static Card.CardComparer cardComparer;
@@ -35,7 +37,14 @@ namespace Chibre_Server.Game
         private int score;
         private int power;
 
+        /// <summary>
+        /// Score for each type of announce
+        /// </summary>
         private static readonly Dictionary<AnnounceType, int> scoreAnnouce;
+
+        /// <summary>
+        /// Power of an annouce. Highest score is the most powerful
+        /// </summary>
         private static readonly Dictionary<AnnounceType, int> powerAnnounce;
 
         static Announce()
