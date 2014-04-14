@@ -78,8 +78,8 @@ namespace Chibre_Server.Game
             if (player.Id == playerTurn)
             {
                 ++playerTurnNumber;
-                playerTurn = (playerTurn + 1) % players.Count();
                 table.AddCard(playerTurn, card);
+                playerTurn = (playerTurn + 1) % players.Count();
                 if (playerTurnNumber == 4)
                 {
                     playerTurnNumber = 0;
