@@ -19,7 +19,8 @@ namespace Chibre_Server.Game
         private int gameNumber;
         private int atoutPlayer;
         private int playerTurn;
-
+        private int turnNumber;
+        private int playerTurnNumber;
         private GameEngine()
         {
             teams = new Team[2];
@@ -32,6 +33,8 @@ namespace Chibre_Server.Game
             gameNumber = 0;
             atoutPlayer = 0;
             playerTurn = 0;
+            turnNumber = 0;
+            playerTurnNumber = 0;
         }
 
         public static GameEngine Instance
@@ -60,13 +63,28 @@ namespace Chibre_Server.Game
         public void ChooseAtout(Color atout)
         {
             this.atout = atout;
+            ManageAnnounces();
+            SendCards();
+        }
 
-            for (int i = 0; i < 9; ++i)
+        public void AddCardTable(Card card, Player player)
+        {
+            if (player.Id == playerTurn)
             {
-                if (i == 0)
-                    ManageAnnounces();
-                GameProcess();
+                ++playerTurnNumber;
+                table.AddCard(playerTurn, card);
+                if (playerTurnNumber == 4)
+                {
+                    playerTurnNumber = 0;
+                    FinishTheTurn();
+                }
             }
+        }
+
+        private void SendCards()
+        {
+            players[playerTurn].LegalCards(LegalCards(players[playerTurn]));
+            playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
         }
 
         public void Chibrer()
@@ -191,13 +209,6 @@ namespace Chibre_Server.Game
             player.Team = team;
         }
 
-        public void AddCardTable(Card card)
-        {
-            table.AddCard(playerTurn, card);
-            playerTurn = (playerTurn + 1) % (teams.Length * teams[0].Length);
-            //TODO : Sync with GameProcess
-        }
-
         private void DistributeCards()
         {
             List<Card> cards = new List<Card>();
@@ -222,16 +233,6 @@ namespace Chibre_Server.Game
                     pair.Value.SendCards(pair.Value.Id == atoutPlayer);
         }
 
-        private void GameProcess()
-        {
-            for(int i = 0; i < 4; ++i)
-            {
-                players[i].LegalCards(LegalCards(players[i]));
-                // TODO : Sync with AddCardTable
-            }
-            FinishTheTurn();
-        }
-
         private void FinishTheTurn()
         {
             List<Card> cards = table.Cards;
@@ -249,6 +250,13 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
+
+            if(turnNumber == 9)
+            {
+
+            }
+
+            ++turnNumber;
         }
 
         private Card WhichCardDoesWin(List<Card> cards)

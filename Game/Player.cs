@@ -64,7 +64,7 @@ namespace Chibre_Server.Game
         public void PlayCard(Card card)
         {
             cards.Remove(card);
-            team.GameEngine.AddCardTable(card);
+            team.GameEngine.AddCardTable(card, this);
         }
 
         public void LegalCards(List<Card> cards)
