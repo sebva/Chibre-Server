@@ -79,11 +79,15 @@ namespace Chibre_Server
             connection.IsReceiving = true;
         }
 
-        public void OnHelloReceived(Guid uuid)
+        public int OnHelloReceived(Guid uuid)
         {
             Debug.WriteLine(uuid.ToString());
-            if(clients.Add(uuid))
+            if (clients.Add(uuid))
+            {
                 ClientListener.OnClientConnected(clients.Count);
+                return clients.Count;
+            }
+            return -1;
         }
 
         public static string[] GetIPs()

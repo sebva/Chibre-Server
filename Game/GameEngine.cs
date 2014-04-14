@@ -68,7 +68,7 @@ namespace Chibre_Server.Game
 
         private void ChooseAtout()
         {
-            bool atoutChosen = !players[atoutPlayer].ChooseAtout();
+            //players[atoutPlayer].ChooseAtout();
             //TODO Wait until an answer of player
 
             players[(atoutPlayer + 2) % players.Count].ChooseAtoutChiber();

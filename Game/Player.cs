@@ -27,12 +27,10 @@ namespace Chibre_Server.Game
         /// <summary>
         /// Give the possibity to choose atout
         /// </summary>
-        /// <returns>True : has chosen, False : has "chibré" </returns>
-        public bool ChooseAtout()
+        /// <param name="atout">Things</param>
+        public void ChooseAtout(Color atout)
         {
-            //TODO : Choose atout
-            //team.GameEngine.ChooseAtout(...);
-            return true;
+            team.GameEngine.ChooseAtout(atout);
         }
 
         public void ChooseAtoutChiber()
@@ -44,6 +42,11 @@ namespace Chibre_Server.Game
         public Team Team
         {
             get { return team; }
+        }
+
+        public Connection Connection
+        {
+            get { return connection; }
         }
 
         public SortedSet<Card> Cards

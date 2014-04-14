@@ -16,7 +16,6 @@ namespace Chibre_Server.Game
     class Connection
     {
         private StreamSocket socket;
-        private Player player;
         private bool _receiveData = false;
 
         public Connection(StreamSocket socket)
@@ -24,9 +23,10 @@ namespace Chibre_Server.Game
             this.socket = socket;
         }
 
-        public void SetPlayer(ref Player player)
+        public Player Player
         {
-            this.player = player;
+            get;
+            set;
         }
 
         public bool IsReceiving
@@ -110,7 +110,7 @@ namespace Chibre_Server.Game
                 string methodName = UnderscoreToCamel(jsonRes.GetNamedString("action"));
                 MethodInfo m = t.GetDeclaredMethod(methodName);
                 if (m != null)
-                    m.Invoke(null, new object[] { jsonRes, player });
+                    m.Invoke(null, new object[] { jsonRes, this });
                 else
                     throw new NotImplementedException("The method " + methodName + " does not exist in Protocol.cs");
             }
