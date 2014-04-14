@@ -149,8 +149,8 @@ namespace Chibre_Server.Game
             for (int i = 0; i <= (cards.Count - serie) && !output; ++i)
             {
                 output = true;
-                for (int j = i; j < i + serie; ++j)
-                    output &= (cards[j + 1].Value - cards[j].Value == 1);
+                for (int j = 0; j < serie-1; ++j)
+                    output &= (cards[i + j + 1].Value - cards[i + j].Value == 1);
             }
             return output;
         }
