@@ -266,8 +266,8 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
-
             ++turnNumber;
+            SendCards();
         }
 
         private Card WhichCardDoesWin(List<Card> cards)
