@@ -126,7 +126,7 @@ namespace Chibre_Server
             Score score1 = gameEngine.Team1.Score;
 
             DrawScoreSticks(score1.Twenty, marginUpDown / 2.0, false);
-            DrawScoreSticks(score1.Fifty, height / 4.0, false);
+            DrawScoreSticksFifty(score1.Fifty, height / 4.0, false);
             DrawScoreSticks(score1.Hundred, height / 2.0 - marginUpDown / 2.0 - teamFontSize, false);
 
             TextBlock ones1 = new TextBlock()
@@ -160,7 +160,7 @@ namespace Chibre_Server
             Score score2 = gameEngine.Team2.Score;
 
             DrawScoreSticks(score2.Twenty, height - marginUpDown / 2.0, true);
-            DrawScoreSticks(score2.Fifty, height * 0.75, true);
+            DrawScoreSticksFifty(score2.Fifty, height * 0.75, true);
             DrawScoreSticks(score2.Hundred, height / 2.0 + marginUpDown / 2.0 + teamFontSize, true);
 
             TextBlock ones2 = new TextBlock()
@@ -188,6 +188,48 @@ namespace Chibre_Server
             #endregion
             
             foreach (Line line in constantLines)
+                ScoreCanvas.Children.Add(line);
+        }
+
+        private void DrawScoreSticksFifty(int amount, double y, bool leftToRight)
+        {
+            List<Line> lines = new List<Line>();
+
+            double inversion = leftToRight ? 1.0 : -1.0;
+            double x = leftToRight ? marginLeftRight : ScoreCanvas.ActualWidth - marginLeftRight;
+            double xInit = x;
+            for (int i = 1; i <= amount; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    lines.Add(new Line()
+                    {
+                        X1 = x,
+                        Y1 = y + (stickHeight / 2.0 * inversion),
+                        X2 = xInit,
+                        Y2 = y - (stickHeight / 2.0 * inversion),
+                        Stroke = stickBrush,
+                        StrokeThickness = stickStroke
+                    });
+                    x += innerSticksMargin * inversion;
+                }
+                else
+                {
+                    lines.Add(new Line()
+                    {
+                        X1 = x + stickHeight / 2.0 * inversion,
+                        Y1 = y - stickHeight / 2.0 * inversion,
+                        X2 = x,
+                        Y2 = y + stickHeight / 2.0 * inversion,
+                        Stroke = stickBrush,
+                        StrokeThickness = stickStroke
+                    });
+                    xInit = x; 
+                    x += (stickHeight / 2.0) * inversion;
+                }
+            }
+
+            foreach (Line line in lines)
                 ScoreCanvas.Children.Add(line);
         }
 
