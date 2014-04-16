@@ -108,6 +108,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ColorToImagePathConverter.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
@@ -145,6 +146,7 @@
     <PRIResource Include="Strings\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\carreau.png" />
     <Content Include="Assets\carreau_as.png" />
     <Content Include="Assets\carreau_dame.png" />
     <Content Include="Assets\carreau_eight.png" />
@@ -154,6 +156,7 @@
     <Content Include="Assets\carreau_six.png" />
     <Content Include="Assets\carreau_ten.png" />
     <Content Include="Assets\carreau_valet.png" />
+    <Content Include="Assets\coeur.png" />
     <Content Include="Assets\coeur_as.png" />
     <Content Include="Assets\coeur_dame.png" />
     <Content Include="Assets\coeur_eight.png" />
@@ -163,7 +166,9 @@
     <Content Include="Assets\coeur_six.png" />
     <Content Include="Assets\coeur_ten.png" />
     <Content Include="Assets\coeur_valet.png" />
+    <Content Include="Assets\color_empty.png" />
     <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\pique.png" />
     <Content Include="Assets\pique_as.png" />
     <Content Include="Assets\pique_dame.png" />
     <Content Include="Assets\pique_eight.png" />
@@ -176,6 +181,7 @@
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\trefle.png" />
     <Content Include="Assets\trefle_as.png" />
     <Content Include="Assets\trefle_dame.png" />
     <Content Include="Assets\trefle_eight.png" />

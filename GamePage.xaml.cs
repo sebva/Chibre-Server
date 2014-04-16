@@ -81,6 +81,7 @@ namespace Chibre_Server
         {
             GameEngine gameEngine = GameEngine.Instance;
             defaultViewModel["Table"] = gameEngine.Table;
+            defaultViewModel["GameEngine"] = gameEngine;
             gameEngine.Team1.Score.PropertyChanged += Score_PropertyChanged;
             gameEngine.Team2.Score.PropertyChanged += Score_PropertyChanged;
         }

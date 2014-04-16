@@ -12,6 +12,7 @@
     
     <Page.Resources>
         <local:CardToImagePathConverter x:Key="CardToImage" />
+        <local:ColorToImagePathConverter x:Key="ColorToImage" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -62,6 +63,12 @@
                     <CompositeTransform Rotation="180"/>
                 </TextBlock.RenderTransform>
             </TextBlock>
+
+            <Image x:Name="Atout" Grid.RowSpan="3" Width="100" Height="100" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" Source="{Binding GameEngine.Atout, Converter={StaticResource ColorToImage}}" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <CompositeTransform Rotation="90"/>
+                </Image.RenderTransform>
+            </Image>
 
             <Image x:Name="Card1" Grid.Column="1" Grid.Row="1" Source="{Binding Table.Player1Card, Converter={StaticResource CardToImage}}" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>

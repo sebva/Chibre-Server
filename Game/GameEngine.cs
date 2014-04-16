@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace Chibre_Server.Game
 {
-    class GameEngine
+    class GameEngine : INotifyPropertyChanged
     {
         private static GameEngine instance = null;
         private Table table;
@@ -21,6 +22,8 @@ namespace Chibre_Server.Game
         private int playerTurn;
         private int turnNumber;
         private int playerTurnNumber;
+
+        public event PropertyChangedEventHandler PropertyChanged;
         private GameEngine()
         {
             teams = new Team[2];
@@ -35,6 +38,7 @@ namespace Chibre_Server.Game
             playerTurn = 0;
             turnNumber = 0;
             playerTurnNumber = 0;
+            AtoutChoosen = false;
         }
 
         public static GameEngine Instance
@@ -68,7 +72,9 @@ namespace Chibre_Server.Game
 
         public void ChooseAtout(Color atout)
         {
+            AtoutChoosen = true;
             this.atout = atout;
+            NotifyPropertyChanged("Atout");
             ManageAnnounces();
             players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(false);
             SendCards();
@@ -410,7 +416,25 @@ namespace Chibre_Server.Game
             return output;
         }
 
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                GamePage.LatestDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                   () =>
+                   {
+                       PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                   }).AsTask().Wait();
+            }
+        }
+
         #region Properties
+
+        public Boolean AtoutChoosen
+        {
+            get;
+            private set;
+        }
 
         public Color Atout
         {
