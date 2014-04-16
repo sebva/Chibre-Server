@@ -427,6 +427,15 @@ namespace Chibre_Server.Game
             get { return table; }
         }
 
+        public Team Team1
+        {
+            get { return teams[0]; }
+        }
+        public Team Team2
+        {
+            get { return teams[1]; }
+        }
+
         #endregion
     }
 }

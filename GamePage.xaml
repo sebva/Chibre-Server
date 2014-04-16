@@ -25,14 +25,13 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="550"/>
+            <ColumnDefinition Width="500"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Canvas Grid.Column="0">
-            <TextBlock x:Name="Score1" Canvas.Left="187" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="194" FontSize="36"/>
-            <TextBlock x:Name="Score2" Canvas.Left="187" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="474" FontSize="36"/>
-        </Canvas>
+        <Border Grid.Column="0" Margin="20,20,0,20" BorderBrush="Beige" BorderThickness="20,20,20,20" CornerRadius="8,8,8,8">
+            <Canvas x:Name="ScoreCanvas" Background="Black" />
+        </Border>
 
         <Grid Background="#FF3DB02B" Grid.Column="2" Margin="20,20,20,20">
             <Grid.RowDefinitions>

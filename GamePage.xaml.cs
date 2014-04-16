@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 // Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -59,6 +61,7 @@ namespace Chibre_Server
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
+            ScoreCanvas.Loaded += DrawScoreBoard;
         }
 
         /// <summary>
@@ -76,7 +79,242 @@ namespace Chibre_Server
         {
             GameEngine gameEngine = GameEngine.Instance;
             defaultViewModel["Table"] = gameEngine.Table;
+            gameEngine.Team1.Score.PropertyChanged += Score_PropertyChanged;
+            gameEngine.Team2.Score.PropertyChanged += Score_PropertyChanged;
         }
+
+        void Score_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Score")
+                DrawScoreBoard();
+        }
+
+        #region ScoreBoard
+
+        private Brush lineBrush = new SolidColorBrush(Colors.Red);
+        private Brush stickBrush = new SolidColorBrush(Colors.White);
+        private Brush oneBrush = new SolidColorBrush(Colors.White);
+        private List<Line> constantLines = null;
+        private const double marginLeftRight = 50;
+        private const double marginUpDown = 70;
+        private const double lineStroke = 3;
+        private const double oneFontSize = 40;
+        private const double teamFontSize = 18;
+        private const double innerSticksMargin = 10;
+        private const double outerSticksMargin = 18;
+        private const double stickHeight = 40;
+        private const double stickStroke = 3;
+        private const double diagonalStickOverlap = 5;
+
+        private void DrawScoreBoard()
+        {
+            if (constantLines == null)
+                InitializeConstantLines();
+
+            ScoreCanvas.Children.Clear();
+            double height = ScoreCanvas.ActualHeight;
+            double width = ScoreCanvas.ActualWidth;
+            if (double.IsNaN(height)) // Not yet ready
+                return;
+
+            GameEngine gameEngine = GameEngine.Instance;
+
+            #region Team1
+            Score score1 = gameEngine.Team1.Score;
+
+            DrawScoreSticks(score1.Twenty, marginUpDown / 2.0, false);
+            DrawScoreSticks(score1.Fifty, height / 4.0, false);
+            DrawScoreSticks(score1.Hundred, height / 2.0 - marginUpDown / 2.0 - teamFontSize, false);
+
+            TextBlock ones1 = new TextBlock()
+            {
+                Text = Convert.ToString(score1.One),
+                FontSize = oneFontSize,
+                Foreground = oneBrush,
+                RenderTransform = new RotateTransform() { Angle=180 },
+                RenderTransformOrigin = new Point(0.5, 0.5)
+            };
+            ScoreCanvas.Children.Add(ones1);
+            Canvas.SetLeft(ones1, marginLeftRight);
+            Canvas.SetTop(ones1, height / 4.0 - oneFontSize * 2.0 / 3.0);
+
+            TextBlock team1 = new TextBlock()
+            {
+                Text = "Player 1 & Player 3",
+                FontSize = teamFontSize,
+                Foreground = oneBrush,
+                RenderTransform = new RotateTransform() { Angle = 180 },
+                RenderTransformOrigin = new Point(0.5, 0.5)
+            };
+            ScoreCanvas.Children.Add(team1);
+            team1.Measure(new Size(1000, 1000));
+            Canvas.SetLeft(team1, width / 2.0 - team1.DesiredSize.Width / 2.0);
+            Canvas.SetTop(team1, height / 2.0 - teamFontSize * 1.5);
+
+            #endregion
+
+            #region Team2
+            Score score2 = gameEngine.Team2.Score;
+
+            DrawScoreSticks(score2.Twenty, height - marginUpDown / 2.0, true);
+            DrawScoreSticks(score2.Fifty, height * 0.75, true);
+            DrawScoreSticks(score2.Hundred, height / 2.0 + marginUpDown / 2.0 + teamFontSize, true);
+
+            TextBlock ones2 = new TextBlock()
+            {
+                Text = Convert.ToString(score2.One),
+                FontSize = oneFontSize,
+                Foreground = oneBrush
+            };
+            ScoreCanvas.Children.Add(ones2);
+            ones2.Measure(new Size(1000, 1000));
+            Canvas.SetLeft(ones2, width - marginLeftRight - ones2.DesiredSize.Width);
+            Canvas.SetTop(ones2, height * 0.75 - oneFontSize / 2.0);
+
+            TextBlock team2 = new TextBlock()
+            {
+                Text = "Player 2 & Player 4",
+                FontSize = teamFontSize,
+                Foreground = oneBrush
+            };
+            ScoreCanvas.Children.Add(team2);
+            team2.Measure(new Size(1000, 1000));
+            Canvas.SetLeft(team2, width / 2.0 - team2.DesiredSize.Width / 2.0);
+            Canvas.SetTop(team2, height / 2.0 + teamFontSize * 0.25);
+
+            #endregion
+            
+            foreach (Line line in constantLines)
+                ScoreCanvas.Children.Add(line);
+        }
+
+        private void DrawScoreSticks(int amount, double y, bool leftToRight)
+        {
+            List<Line> lines = new List<Line>();
+
+            double inversion = leftToRight ? 1.0 : -1.0;
+            double x = leftToRight ? marginLeftRight : ScoreCanvas.ActualWidth - marginLeftRight;
+            double xInit = x;
+            for (int i = 1; i <= amount; i++)
+            {
+                if (i % 5 == 0)
+                {
+                    lines.Add(new Line()
+                    {
+                        X1 = xInit - diagonalStickOverlap * inversion,
+                        Y1 = y + (stickHeight / 2.0 * inversion),
+                        X2 = x - (innerSticksMargin * inversion) + diagonalStickOverlap * inversion,
+                        Y2 = y - (stickHeight / 2.0 * inversion),
+                        Stroke = stickBrush,
+                        StrokeThickness = stickStroke
+                    });
+                    x += (outerSticksMargin - innerSticksMargin) * inversion;
+                    xInit = x;
+                }
+                else
+                {
+                    lines.Add(new Line()
+                    {
+                        X1 = x,
+                        Y1 = y - stickHeight / 2.0,
+                        X2 = x,
+                        Y2 = y + stickHeight / 2.0,
+                        Stroke = stickBrush,
+                        StrokeThickness = stickStroke
+                    });
+                    x += (innerSticksMargin * inversion);
+                }
+            }
+                
+            foreach(Line line in lines)
+                ScoreCanvas.Children.Add(line);
+        }
+
+        private void InitializeConstantLines()
+        {
+            double height = ScoreCanvas.ActualHeight;
+            double width = ScoreCanvas.ActualWidth;
+            constantLines = new List<Line>(7);
+
+
+            // Middle line
+            constantLines.Add(new Line()
+            {
+                X1 = 0,
+                Y1 = height / 2.0,
+                X2 = width,
+                Y2 = height / 2.0,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+            // Team 1 upper Z line
+            constantLines.Add(new Line()
+            {
+                X1 = marginLeftRight,
+                Y1 = marginUpDown,
+                X2 = width - marginLeftRight,
+                Y2 = marginUpDown,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+            // Team 1 diagonal Z line
+            constantLines.Add(new Line()
+            {
+                X1 = width - marginLeftRight,
+                Y1 = marginUpDown,
+                X2 = marginLeftRight,
+                Y2 = height / 2.0 - marginUpDown - teamFontSize,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+            // Team 1 lower Z line
+            constantLines.Add(new Line()
+            {
+                X1 = marginLeftRight,
+                Y1 = height / 2.0 - marginUpDown - teamFontSize,
+                X2 = width - marginLeftRight,
+                Y2 = height / 2.0 - marginUpDown - teamFontSize,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+            // Team 2 upper Z line
+            constantLines.Add(new Line()
+            {
+                X1 = marginLeftRight,
+                Y1 = height / 2.0 + marginUpDown + teamFontSize,
+                X2 = width - marginLeftRight,
+                Y2 = height / 2.0 + marginUpDown + teamFontSize,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+            // Team 2 diagonal Z line
+            constantLines.Add(new Line()
+            {
+                X1 = width - marginLeftRight,
+                Y1 = height / 2.0 + marginUpDown + teamFontSize,
+                X2 = marginLeftRight,
+                Y2 = height - marginUpDown,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+            // Team 2 lower Z line
+            constantLines.Add(new Line()
+            {
+                X1 = marginLeftRight,
+                Y1 = height - marginUpDown,
+                X2 = width - marginLeftRight,
+                Y2 = height - marginUpDown,
+                Stroke = lineBrush,
+                StrokeThickness = lineStroke
+            });
+        }
+
+        private void DrawScoreBoard(object sender, RoutedEventArgs e)
+        {
+            DrawScoreBoard();
+        }
+
+        #endregion
 
         /// <summary>
         /// Conserve l'état associé à cette page en cas de suspension de l'application ou de la

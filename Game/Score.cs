@@ -3,16 +3,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Chibre_Server.Game
 {
-    class Score
+    class Score : INotifyPropertyChanged
     {
         private List<Pair<Object, int>> categories;
         private int one;
         private int twenty;
         private int fifty;
         private int hundred;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Score()
         {
@@ -28,6 +30,7 @@ namespace Chibre_Server.Game
         {
             Addition(points);
             Reduce();
+            NotifyScoreChanged();
         }
 
         private void Addition(int points)
@@ -56,6 +59,18 @@ namespace Chibre_Server.Game
                 categories[i - 1].First = nextItem;
             }
         }
+        public void NotifyScoreChanged()
+        {
+            if (PropertyChanged != null)
+            {
+                GamePage.LatestDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                   () =>
+                   {
+                       PropertyChanged(this, new PropertyChangedEventArgs("Score"));
+                   }).AsTask().Wait();
+            }
+        }
+
 
         #region Properties
         public int Twenty
