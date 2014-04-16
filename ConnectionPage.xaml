@@ -41,7 +41,7 @@
                 <CompositeTransform Rotation="180"/>
             </TextBlock.RenderTransform>
         </TextBlock>
-        <TextBlock HorizontalAlignment="Center" Margin="0,-200,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Veuillez connecter 4 joueurs à :" VerticalAlignment="Center" FontSize="48"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,-200,0,0" Grid.Row="1" TextWrapping="Wrap" x:Uid="PleaseConnect" Text="" VerticalAlignment="Center" FontSize="48"/>
         <TextBlock x:Name="IP" Height="300" HorizontalAlignment="Center" Margin="0,220,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="48" TextAlignment="Center" FontStyle="Italic">
         	<Run Text="0.0.0.0"/>
         	<LineBreak/>

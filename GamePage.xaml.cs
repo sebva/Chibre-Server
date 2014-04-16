@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -30,6 +31,7 @@ namespace Chibre_Server
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private static GamePage latestInstance;
+        private ResourceLoader loader = new ResourceLoader();
 
         /// <summary>
         /// Cela peut être remplacé par un modèle d'affichage fortement typé.
@@ -140,7 +142,7 @@ namespace Chibre_Server
 
             TextBlock team1 = new TextBlock()
             {
-                Text = "Player 1 & Player 3",
+                Text = loader.GetString("Team1Members"),
                 FontSize = teamFontSize,
                 Foreground = oneBrush,
                 RenderTransform = new RotateTransform() { Angle = 180 },
@@ -173,7 +175,7 @@ namespace Chibre_Server
 
             TextBlock team2 = new TextBlock()
             {
-                Text = "Player 2 & Player 4",
+                Text = loader.GetString("Team2Members"),
                 FontSize = teamFontSize,
                 Foreground = oneBrush
             };
