@@ -134,6 +134,7 @@
     <Compile Include="Game\Value.cs" />
     <Compile Include="Game\Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CardToImagePathConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -142,10 +143,46 @@
     <None Include="Chibre-Server_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\carreau_as.png" />
+    <Content Include="Assets\carreau_dame.png" />
+    <Content Include="Assets\carreau_eight.png" />
+    <Content Include="Assets\carreau_nine.png" />
+    <Content Include="Assets\carreau_roi.png" />
+    <Content Include="Assets\carreau_seven.png" />
+    <Content Include="Assets\carreau_six.png" />
+    <Content Include="Assets\carreau_ten.png" />
+    <Content Include="Assets\carreau_valet.png" />
+    <Content Include="Assets\coeur_as.png" />
+    <Content Include="Assets\coeur_dame.png" />
+    <Content Include="Assets\coeur_eight.png" />
+    <Content Include="Assets\coeur_nine.png" />
+    <Content Include="Assets\coeur_roi.png" />
+    <Content Include="Assets\coeur_seven.png" />
+    <Content Include="Assets\coeur_six.png" />
+    <Content Include="Assets\coeur_ten.png" />
+    <Content Include="Assets\coeur_valet.png" />
     <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\pique_as.png" />
+    <Content Include="Assets\pique_dame.png" />
+    <Content Include="Assets\pique_eight.png" />
+    <Content Include="Assets\pique_nine.png" />
+    <Content Include="Assets\pique_roi.png" />
+    <Content Include="Assets\pique_seven.png" />
+    <Content Include="Assets\pique_six.png" />
+    <Content Include="Assets\pique_ten.png" />
+    <Content Include="Assets\pique_valet.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\trefle_as.png" />
+    <Content Include="Assets\trefle_dame.png" />
+    <Content Include="Assets\trefle_eight.png" />
+    <Content Include="Assets\trefle_nine.png" />
+    <Content Include="Assets\trefle_roi.png" />
+    <Content Include="Assets\trefle_seven.png" />
+    <Content Include="Assets\trefle_six.png" />
+    <Content Include="Assets\trefle_ten.png" />
+    <Content Include="Assets\trefle_valet.png" />
     <Content Include="Common\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

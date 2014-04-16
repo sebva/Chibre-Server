@@ -1,4 +1,5 @@
 ﻿using Chibre_Server.Common;
+using Chibre_Server.Game;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,7 @@ namespace Chibre_Server
 
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private static GamePage latestInstance;
 
         /// <summary>
         /// Cela peut être remplacé par un modèle d'affichage fortement typé.
@@ -44,9 +46,15 @@ namespace Chibre_Server
             get { return this.navigationHelper; }
         }
 
+        public static Windows.UI.Core.CoreDispatcher LatestDispatcher
+        {
+            get { return latestInstance.Dispatcher;  }
+        }
+
 
         public GamePage()
         {
+            latestInstance = this;
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
@@ -66,6 +74,8 @@ namespace Chibre_Server
         /// antérieure. L'état n'aura pas la valeur Null lors de la première visite de la page.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            GameEngine gameEngine = GameEngine.Instance;
+            defaultViewModel["Table"] = gameEngine.Table;
         }
 
         /// <summary>

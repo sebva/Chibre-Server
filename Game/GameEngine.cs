@@ -422,6 +422,11 @@ namespace Chibre_Server.Game
             get { return atoutPlayer; }
         }
 
+        public Table Table
+        {
+            get { return table; }
+        }
+
         #endregion
     }
 }

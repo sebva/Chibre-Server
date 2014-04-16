@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
+using Windows.System.Threading;
 
 namespace Chibre_Server.Game
 {
@@ -17,10 +18,12 @@ namespace Chibre_Server.Game
     {
         private StreamSocket socket;
         private bool _receiveData = false;
+        DataWriter writer;
 
         public Connection(StreamSocket socket)
         {
             this.socket = socket;
+            writer = new DataWriter(socket.OutputStream);
         }
 
         public Player Player
@@ -36,12 +39,10 @@ namespace Chibre_Server.Game
                 if (_receiveData ^ value) // Value changed
                 {
                     if (value == true)
-                    {
-                        ReceiveLoop();
-                    }
+                        ThreadPool.RunAsync((workItem) => ReceiveLoop());
+                    else
+                        _receiveData = value;
                 }
-
-                _receiveData = value;
             }
             get { return _receiveData; }
         }
@@ -53,9 +54,9 @@ namespace Chibre_Server.Game
 
             _receiveData = true;
 
+            DataReader reader = new DataReader(socket.InputStream);
             while (_receiveData)
             {
-                DataReader reader = new DataReader(socket.InputStream);
                 // Set inputstream options so that we don't have to know the data size
                 reader.InputStreamOptions = InputStreamOptions.Partial;
 
@@ -68,7 +69,7 @@ namespace Chibre_Server.Game
                 int payloadLength = reader.ReadInt32();
 
                 count = await reader.LoadAsync((uint)payloadLength);
-                if (count < sizeof(int))
+                if (count < (uint)payloadLength)
                 {
                     Debug.WriteLine("Socket closed");
                     return;
@@ -80,21 +81,24 @@ namespace Chibre_Server.Game
                 {
                     ProcessData(received);
                 }
-                catch(NotImplementedException ex)
+                catch (NotImplementedException ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
             }
+            reader.Dispose();
         }
 
         public async void SendPayload(string payload)
         {
-            int length = payload.Length;
+            await Task.Run(async() =>
+            {
+                int length = payload.Length;
 
-            DataWriter writer = new DataWriter(socket.OutputStream);
-            writer.WriteInt32(length);
-            writer.WriteString(payload);
-            await writer.StoreAsync();
+                writer.WriteInt32(length);
+                writer.WriteString(payload);
+                await writer.StoreAsync();
+            });
         }
 
         private void ProcessData(string received)

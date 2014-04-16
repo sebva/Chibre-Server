@@ -59,7 +59,7 @@ namespace Chibre_Server
             cm.SetAcceptConnections(true);
         }
 
-        public void OnClientConnected(int number)
+        public async void OnClientConnected(int number)
         {
             TextBlock playerText;
             switch(number)
@@ -79,7 +79,7 @@ namespace Chibre_Server
                     break;
             }
 
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
                     playerText.Foreground = IP.Foreground;

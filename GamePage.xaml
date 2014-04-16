@@ -9,12 +9,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    
+    <Page.Resources>
+        <local:CardToImagePathConverter x:Key="CardToImage" />
+    </Page.Resources>
 
-    <!--
-        This grid acts as a root panel for the page that defines two rows:
-        * Row 0 contains the back button and page title
-        * Row 1 contains the rest of the page layout
-    -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
@@ -29,7 +28,63 @@
             <ColumnDefinition Width="550"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Column="1" Margin="20,20,20,20" Background="Black"></Canvas>
-        <Canvas Background="#FF3DB02B" Grid.Column="2" Margin="20,20,20,20"></Canvas>
+
+        <Canvas Grid.Column="0">
+            <TextBlock x:Name="Score1" Canvas.Left="187" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="194" FontSize="36"/>
+            <TextBlock x:Name="Score2" Canvas.Left="187" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="474" FontSize="36"/>
+        </Canvas>
+
+        <Grid Background="#FF3DB02B" Grid.Column="2" Margin="20,20,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="Player1_Label" Height="70" Width="70" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="0" Grid.Column="0" TextAlignment="Center" VerticalAlignment="Top" Text="1" FontSize="72" RenderTransformOrigin="0.5,0.5" Foreground="#FF5D5D5D" >
+                <TextBlock.RenderTransform>
+                    <CompositeTransform Rotation="180"/>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <TextBlock x:Name="Player2_Label" Height="70" Width="70" HorizontalAlignment="Left" Margin="0,0,0,10" Grid.Row="4" Grid.Column="0" TextAlignment="Center" VerticalAlignment="Bottom" Text="2" FontSize="72" Foreground="#FF5D5D5D" />
+            <TextBlock x:Name="Player3_Label" Height="70" Width="70" HorizontalAlignment="Right" Margin="0,0,0,10" Grid.Row="4" Grid.Column="4" TextAlignment="Center" VerticalAlignment="Bottom" Text="3" FontSize="72" Foreground="#FF5D5D5D" />
+            <TextBlock x:Name="Player4_Label" Height="70" Width="70" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="0" Grid.Column="4" TextAlignment="Center" VerticalAlignment="Top" Text="4" FontSize="72" RenderTransformOrigin="0.5,0.5" Foreground="#FF5D5D5D" >
+                <TextBlock.RenderTransform>
+                    <CompositeTransform Rotation="180"/>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+            <Image x:Name="Card1" Grid.Column="1" Grid.Row="1" Source="{Binding Table.Player1Card, Converter={StaticResource CardToImage}}" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <CompositeTransform Rotation="-45"/>
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="Card2" Grid.Column="1" Grid.Row="3" Source="{Binding Table.Player2Card, Converter={StaticResource CardToImage}}" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <CompositeTransform Rotation="45"/>
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="Card3" Grid.Column="3" Grid.Row="3" Source="{Binding Table.Player3Card, Converter={StaticResource CardToImage}}" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <CompositeTransform Rotation="-45"/>
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="Card4" Grid.Column="3" Grid.Row="1" Source="{Binding Table.Player4Card, Converter={StaticResource CardToImage}}" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <CompositeTransform Rotation="45"/>
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
+
     </Grid>
 </Page>
