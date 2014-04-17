@@ -50,18 +50,18 @@ namespace Chibre_Server.Game
 
         private void Reduce()
         {
-            for (int i = categories.Count - 1; i > 0; --i)
-            {
-                int currentItem = (int)categories[i].First;
-                int nextItem = (int)categories[i - 1].First;
+            int o = categories.Count - 1;
+            int t = o - 1;
 
-                int ratio = currentItem / categories[i - 1].Second;
-                nextItem += ratio;
-                currentItem -= ratio * categories[i - 1].Second;
+            int currentItem = (int)categories[o].First;
+            int nextItem = (int)categories[t].First;
 
-                categories[i].First = currentItem;
-                categories[i - 1].First = nextItem;
-            }
+            int ratio = currentItem / categories[t].Second;
+            nextItem += ratio;
+            currentItem -= ratio * categories[t].Second;
+
+            categories[o].First = currentItem;
+            categories[t].First = nextItem;
         }
         public void NotifyScoreChanged()
         {
