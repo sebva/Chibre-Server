@@ -398,7 +398,7 @@ namespace Chibre_Server.Game
 
                     // Enable all higher atout cards (or all if nobody has cut)
                     foreach (Pair<Card, Object> pair in legalCards)
-                        if (pair.First.Color == atout && (atoutCards.Count == 0 || atoutComparer.Compare(pair.First, atoutCards[0]) > 0))
+                        if (pair.First.Color == atout && (atoutCards.Count == 0 || atoutComparer.Compare(pair.First, atoutCards[0]) < 0))
                             pair.Second = true;
 
                     // If our last cards are only atout and below the cut card, we have to play with
