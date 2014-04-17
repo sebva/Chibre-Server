@@ -10,20 +10,15 @@ namespace Chibre_Server.Game
     class Score : INotifyPropertyChanged
     {
         private List<Pair<Object, int>> categories;
-        private int one;
-        private int twenty;
-        private int fifty;
-        private int hundred;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Score()
         {
-            this.one = this.twenty = this.fifty = this.hundred = 0;
             categories = new List<Pair<Object, int>>();
-            categories.Add(new Pair<Object, int>(hundred, 100));
-            categories.Add(new Pair<Object, int>(fifty, 50));
-            categories.Add(new Pair<Object, int>(twenty, 20));
-            categories.Add(new Pair<Object, int>(one, 1));
+            categories.Add(new Pair<Object, int>(0, 100));
+            categories.Add(new Pair<Object, int>(0, 50));
+            categories.Add(new Pair<Object, int>(0, 20));
+            categories.Add(new Pair<Object, int>(0, 1));
         }
 
         public void AddPoints(int points)
@@ -38,8 +33,9 @@ namespace Chibre_Server.Game
             foreach (Pair<Object, int> tuple in categories)
             {
                 int item = (int)tuple.First;
-                item += points / tuple.Second;
-                points -= points / tuple.Second;
+                int ratio = points / tuple.Second;
+                item += ratio;
+                points -= ratio * tuple.Second;
                 tuple.First = item;
             }
         }
@@ -51,9 +47,9 @@ namespace Chibre_Server.Game
                 int currentItem = (int)categories[i].First;
                 int nextItem = (int)categories[i - 1].First;
 
-                int value = currentItem / categories[i - 1].Second;
-                nextItem += value;
-                currentItem -= value;
+                int ratio = currentItem / categories[i - 1].Second;
+                nextItem += ratio;
+                currentItem -= ratio * categories[i - 1].Second;
 
                 categories[i].First = currentItem;
                 categories[i - 1].First = nextItem;
@@ -75,22 +71,22 @@ namespace Chibre_Server.Game
         #region Properties
         public int Twenty
         {
-            get { return twenty; }
+            get { return (int)categories[2].First; }
         }
 
         public int Fifty
         {
-            get { return fifty; }
+            get { return (int)categories[1].First; }
         }
 
         public int Hundred
         {
-            get { return hundred; }
+            get { return (int)categories[0].First; }
         }
 
         public int One
         {
-            get { return one; }
+            get { return (int)categories[3].First; }
         }
         #endregion
     }
