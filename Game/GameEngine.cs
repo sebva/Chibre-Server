@@ -275,10 +275,13 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
-            if(++turnNumber < 9)
+            if (++turnNumber < 9)
                 SendCards();
             else
+            {
+                winner.Team.Score.AddPoints(5); // 5 de der
                 StartNewTurn();
+            }
         }
 
         private Card WhichCardDoesWin(List<Card> cards)
