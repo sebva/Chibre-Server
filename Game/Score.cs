@@ -75,6 +75,10 @@ namespace Chibre_Server.Game
             }
         }
 
+        public bool IsMatch()
+        {
+            return turnTotPoint == 157;
+        }
 
         #region Properties
         public int Twenty
