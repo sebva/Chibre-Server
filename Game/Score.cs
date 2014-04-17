@@ -11,9 +11,11 @@ namespace Chibre_Server.Game
     {
         private List<Pair<Object, int>> categories;
         public event PropertyChangedEventHandler PropertyChanged;
+        private int turnTotPoint;
 
         public Score()
         {
+            turnTotPoint = 0;
             categories = new List<Pair<Object, int>>();
             categories.Add(new Pair<Object, int>(0, 100));
             categories.Add(new Pair<Object, int>(0, 50));
@@ -23,9 +25,15 @@ namespace Chibre_Server.Game
 
         public void AddPoints(int points)
         {
-            Addition(points);
+            turnTotPoint += points;
+        }
+
+        public void ComputeScore()
+        {
+            Addition(turnTotPoint);
             Reduce();
             NotifyScoreChanged();
+            turnTotPoint = 0;
         }
 
         private void Addition(int points)

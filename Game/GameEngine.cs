@@ -280,6 +280,8 @@ namespace Chibre_Server.Game
             else
             {
                 winner.Team.Score.AddPoints(5); // 5 de der
+                foreach (Team team in teams)
+                    team.Score.ComputeScore();
                 StartNewTurn();
             }
         }
