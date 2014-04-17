@@ -168,6 +168,8 @@
     <Content Include="Assets\coeur_valet.png" />
     <Content Include="Assets\color_empty.png" />
     <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\Logo.scale-140.png" />
+    <Content Include="Assets\Logo.scale-180.png" />
     <Content Include="Assets\pique.png" />
     <Content Include="Assets\pique_as.png" />
     <Content Include="Assets\pique_dame.png" />
@@ -180,6 +182,9 @@
     <Content Include="Assets\pique_valet.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-140.png" />
+    <Content Include="Assets\SplashScreen.scale-180.png" />
+    <Content Include="Assets\Square310x310Logo.scale-180.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Assets\trefle.png" />
     <Content Include="Assets\trefle_as.png" />

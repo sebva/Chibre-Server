@@ -30,11 +30,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" Margin="20,20,0,20" BorderBrush="Beige" BorderThickness="20,20,20,20" CornerRadius="8,8,8,8">
+        <Border Grid.Column="0" Margin="0,0,0,0" BorderBrush="Beige" BorderThickness="20,20,20,20" CornerRadius="8,8,8,8">
             <Canvas x:Name="ScoreCanvas" Background="Black" />
         </Border>
 
-        <Grid Background="#FF3DB02B" Grid.Column="2" Margin="20,20,20,20">
+        <Grid Background="#FF3DB02B" Grid.Column="2" Margin="20,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100"/>
                 <RowDefinition Height="*"/>
