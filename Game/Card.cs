@@ -155,16 +155,34 @@ namespace Chibre_Server.Game
             powerCards.Add(new Tuple<Value,bool>(Value.Six, false), 1);
         }
 
+        /// <summary>
+        /// Compute the score of a card
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="isAtout"></param>
+        /// <returns>Score</returns>
         public static int ScoreCard(Card card, bool isAtout)
         {
             return isAtout ? scoreAtoutCards[card.Value] : scoreNormalCards[card.Value];
         }
 
+        /// <summary>
+        /// Compute the power of a card
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="isAtout"></param>
+        /// <returns></returns>
         public static int PowerCard(Card card, bool isAtout)
         {
             return powerCards[Tuple.Create(card.Value, isAtout)];
         }
 
+        /// <summary>
+        /// Multi-ton
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static Card CardInstance(Color color, Value value)
         {
             Tuple<Color, Value> tuple = Tuple.Create<Color, Value>(color, value);

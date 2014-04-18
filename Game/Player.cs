@@ -25,7 +25,7 @@ namespace Chibre_Server.Game
         }
 
         /// <summary>
-        /// Give the possibity to choose atout
+        /// Give the possibility to choose atout
         /// </summary>
         /// <param name="atout">Things</param>
         public void ChooseAtout(Color atout)
@@ -33,46 +33,62 @@ namespace Chibre_Server.Game
             team.GameEngine.ChooseAtout(atout);
         }
 
-        public AtoutChoosen AtoutChoosenDelegate
-        {
-            get;
-            set;
-        }
-
+        /// <summary>
+        /// Give the possibility to choose atout for the other player
+        /// </summary>
         public void ChooseAtoutChibrer()
         {
             team.GameEngine.Chibrer();
         }
 
-        public Connection Connection
-        {
-            get { return connection; }
-        }
-
+        /// <summary>
+        /// Add a card to the player
+        /// </summary>
+        /// <param name="card"></param>
         public void AddCard(Card card)
         {
-            Debug.Assert(cards.Count <= 9);
             cards.Add(card);
         }
 
+        /// <summary>
+        /// The the cards to the device
+        /// </summary>
+        /// <param name="shouldChooseAtout"></param>
         public void SendCards(bool shouldChooseAtout)
         {
-            Debug.WriteLine("Sending cards to device");
             Protocol.Distribution(connection, shouldChooseAtout, new List<Card>(cards));
         }
 
+        /// <summary>
+        /// Receive the player card from device
+        /// </summary>
+        /// <param name="card"></param>
         public void PlayCard(Card card)
         {
             cards.Remove(card);
             team.GameEngine.AddCardTable(card, this);
         }
 
+        /// <summary>
+        /// Send the legalcards
+        /// </summary>
+        /// <param name="cards"></param>
         public void LegalCards(List<Card> cards)
         {
             Protocol.TimeToPlay(connection, cards);
         }
 
         #region Properties
+        public AtoutChoosen AtoutChoosenDelegate
+        {
+            get;
+            set;
+        }
+
+        public Connection Connection
+        {
+            get { return connection; }
+        }
 
         public Team Team
         {

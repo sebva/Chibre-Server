@@ -23,11 +23,18 @@ namespace Chibre_Server.Game
             categories.Add(new Pair<Object, int>(0, 1));
         }
 
+        /// <summary>
+        /// Add the points to the score
+        /// </summary>
+        /// <param name="points"></param>
         public void AddPoints(int points)
         {
             turnTotPoint += points;
         }
 
+        /// <summary>
+        /// Compute the score for the scoreboard
+        /// </summary>
         public void ComputeScore()
         {
             Addition(turnTotPoint);
@@ -36,6 +43,10 @@ namespace Chibre_Server.Game
             turnTotPoint = 0;
         }
 
+        /// <summary>
+        /// Add the points to the different categories
+        /// </summary>
+        /// <param name="points"></param>
         private void Addition(int points)
         {
             foreach (Pair<Object, int> tuple in categories)
@@ -48,6 +59,9 @@ namespace Chibre_Server.Game
             }
         }
 
+        /// <summary>
+        /// Reduce if the points are higher than the categories
+        /// </summary>
         private void Reduce()
         {
             int o = categories.Count - 1;
@@ -75,6 +89,10 @@ namespace Chibre_Server.Game
             }
         }
 
+        /// <summary>
+        /// Check if it's a match
+        /// </summary>
+        /// <returns></returns>
         public bool IsMatch()
         {
             return turnTotPoint == 157;

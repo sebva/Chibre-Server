@@ -21,6 +21,11 @@ namespace Chibre_Server.Game
             cards = new List<Pair<Card, int>>();
         }
 
+        /// <summary>
+        /// Add the card of the player to the table
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <param name="card"></param>
         public void AddCard(int playerId, Card card)
         {
             Debug.Assert(cards.Count <= 4);
@@ -28,23 +33,28 @@ namespace Chibre_Server.Game
             NotifyCardsChanged();
         }
 
-        public int Length
-        {
-            get { return cards.Count; }
-        }
-
+        /// <summary>
+        /// Return the color of the first card in the table
+        /// </summary>
+        /// <returns></returns>
         public Color FirstCardColor()
         {
-            Debug.Assert(cards.Count > 0);
             return cards[0].First.Color;
         }
 
+        /// <summary>
+        /// Clear the table
+        /// </summary>
         public void Clear()
         {
             cards.Clear();
-            // TODO Show who has won
         }
 
+        /// <summary>
+        /// Return the card of the player
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
         private Card CardForPlayer(int playerId)
         {
             foreach(Pair<Card, int> card in cards)
@@ -69,6 +79,11 @@ namespace Chibre_Server.Game
         }
 
         #region Properties
+        public int Length
+        {
+            get { return cards.Count; }
+        }
+
         public List<Card> Cards
         {
             get 

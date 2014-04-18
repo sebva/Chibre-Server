@@ -20,6 +20,10 @@ namespace Chibre_Server.Game
             this.gameEngine = gameEngine;
         }
 
+        /// <summary>
+        /// Add a player to the table
+        /// </summary>
+        /// <param name="player"></param>
         public void addPlayer(Player player)
         {
             players.Add(player);
