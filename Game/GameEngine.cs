@@ -75,7 +75,7 @@ namespace Chibre_Server.Game
             AtoutChoosen = true;
             this.atout = atout;
             NotifyPropertyChanged("Atout");
-            ManageAnnounces();
+            SearchAnnounce();
             players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(false);
             SendCards();
         }
@@ -110,7 +110,6 @@ namespace Chibre_Server.Game
         #region Announce
         private void ManageAnnounces()
         {
-            SearchAnnounce();
             if(announces.Count == 1)
                 announces[0].Player.Team.Score.AddPoints(announces[0].Score);
             else if(announces.Count > 1)
@@ -121,8 +120,6 @@ namespace Chibre_Server.Game
                     if (announce.Player.Team == announces[0].Player.Team)
                         announce.Player.Team.Score.AddPoints(announce.Score);
             }
-            foreach (Announce announce in announces)
-                Debug.WriteLine("GE Annouce : " + announce.Score + " for player " + announce.Player.Id);
             announces.Clear();
         }
 
@@ -141,11 +138,12 @@ namespace Chibre_Server.Game
             followCards.Add(new Pair<int, AnnounceType>(4, AnnounceType.Fifty));
             followCards.Add(new Pair<int, AnnounceType>(3, AnnounceType.Twenty));
 
-            IComparer<Card> comparer = new Card.CardValueComparer();
+            IComparer<Card> comparer = new Card.CardComparer();
 
             foreach(KeyValuePair<int, Player> pair in players)
             {
-                SortedSet<Card> cards = new SortedSet<Card>(pair.Value.Cards, comparer);
+                List<Card> cards = new List<Card>(pair.Value.Cards);
+                cards.Sort(comparer);
 
                 foreach(Pair<Value, AnnounceType> pair2 in sameCards)
                     if(FindSameCards(cards, pair2.First))
@@ -158,7 +156,7 @@ namespace Chibre_Server.Game
             }
         }
 
-        private bool FindFollowCards(SortedSet<Card> cardsOriginal, int serie)
+        private bool FindFollowCards(List<Card> cardsOriginal, int serie)
         {
             List<Card> cards = new List<Card>(cardsOriginal);
             Debug.Assert(cardsOriginal.Count == 9);
@@ -167,13 +165,19 @@ namespace Chibre_Server.Game
             for (int i = 0; i <= (cards.Count - serie) && !output; ++i)
             {
                 output = true;
-                for (int j = 0; j < serie-1; ++j)
-                    output &= (cards[i + j + 1].Value - cards[i + j].Value == 1);
+                for (int j = 0; j < serie - 1; ++j)
+                {
+                    Card c1 = cards[i + j + 1];
+                    Card c2 = cards[i + j];
+                    output &= c1.Color == c2.Color && (c1.Value - c2.Value) == 1;
+                }
+                if (output)
+                    return true;
             }
             return output;
         }
 
-        private List<List<Card>> RemoveFollowCards(ref SortedSet<Card> cardsOriginal, int serie)
+        private List<List<Card>> RemoveFollowCards(ref List<Card> cardsOriginal, int serie)
         {
             List<Card> cards = new List<Card>(cardsOriginal);
             Debug.Assert(cardsOriginal.Count == 9);
@@ -183,7 +187,11 @@ namespace Chibre_Server.Game
             {
                 bool output = true;
                 for (int j = 0; j < serie - 1; ++j)
-                    output &= (cards[i + j + 1].Value - cards[i + j].Value == 1);
+                {
+                    Card c1 = cards[i + j + 1];
+                    Card c2 = cards[i + j];
+                    output &= c1.Color == c2.Color && (c1.Value - c2.Value) == 1;
+                }
                 if (output)
                 {
                     List<Card> series = new List<Card>();
@@ -192,12 +200,13 @@ namespace Chibre_Server.Game
                         series.Add(cards[j]);
                         cardsOriginal.Remove(cards[j]);
                     }
+                    followCards.Add(series);
                 }
             }
             return followCards;
         }
 
-        private bool FindSameCards(SortedSet<Card> cards, Value value)
+        private bool FindSameCards(List<Card> cards, Value value)
         {
             int count = 0;
             foreach (Card card in cards)
@@ -206,7 +215,7 @@ namespace Chibre_Server.Game
             return count == 4;
         }
 
-        private List<Card> RemoveSameCard(ref SortedSet<Card> cards, Value value)
+        private List<Card> RemoveSameCard(ref List<Card> cards, Value value)
         {
             List<Card> announceCards = new List<Card>();
             announceCards.Add(Card.CardInstance(Color.Pique, value));
@@ -275,6 +284,8 @@ namespace Chibre_Server.Game
             table.Clear();
 
             playerTurn = winner.Id;
+            if (turnNumber == 0)
+                ManageAnnounces();
             if (++turnNumber < 9)
                 SendCards();
             else
