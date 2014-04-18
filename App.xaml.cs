@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -24,6 +25,8 @@ namespace Chibre_Server
     /// </summary>
     sealed partial class App : Application
     {
+        private DisplayRequest displayRequest = null;
+
         /// <summary>
         /// Initialise l'objet d'application de singleton.  Il s'agit de la première ligne du code créé
         /// à être exécutée. Elle correspond donc à l'équivalent logique de main() ou WinMain().
@@ -80,6 +83,10 @@ namespace Chibre_Server
             }
             // Vérifiez que la fenêtre actuelle est active
             Window.Current.Activate();
+            if(displayRequest == null)
+                displayRequest = new DisplayRequest();
+            
+            displayRequest.RequestActive();
         }
 
         /// <summary>
@@ -101,6 +108,8 @@ namespace Chibre_Server
         /// <param name="e">Détails de la requête de suspension.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            displayRequest.RequestRelease();
+
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: enregistrez l'état de l'application et arrêtez toute activité en arrière-plan
             deferral.Complete();
