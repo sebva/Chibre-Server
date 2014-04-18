@@ -80,17 +80,17 @@ namespace Chibre_Server
         public int OnHelloReceived(Guid uuid, Connection connection)
         {
             Debug.WriteLine(uuid.ToString());
-            if (clients.Add(uuid))
+            if (clients.Count <= 3 && clients.Add(uuid))
             {
                 int id = clients.Count -1;
                 Player player = new Player(id, ref connection);
                 connection.Player = player;
                 GameEngine.Instance.AddPlayer(player);
                 ClientListener.OnClientConnected(clients.Count);
-
-                return clients.Count;
+                return id + 1;
             }
-            return -1;
+            else
+                return -1;
         }
 
         public static string[] GetIPs()

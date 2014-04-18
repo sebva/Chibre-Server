@@ -20,10 +20,10 @@ namespace Chibre_Server.Game
             if (ok)
             {
                 int playerId = ConnectionManager.Instance.OnHelloReceived(guid, connection);
-                if(playerId != -1)
-                {
+                if (playerId != -1)
                     HelloReply(connection, playerId);
-                }
+                else
+                    Refusal(connection);
             }
             else
                 Debug.WriteLine("Invalid GUID");
