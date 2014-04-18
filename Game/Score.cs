@@ -27,9 +27,16 @@ namespace Chibre_Server.Game
         /// Add the points to the score
         /// </summary>
         /// <param name="points"></param>
-        public void AddPoints(int points)
+        public void AddPoints(int points, bool addToGlobalScoreDirectly = false)
         {
-            turnTotPoint += points;
+            if(addToGlobalScoreDirectly)
+            {
+                Addition(points);
+                Reduce();
+                NotifyScoreChanged();
+            }
+            else
+                turnTotPoint += points;
         }
 
         /// <summary>

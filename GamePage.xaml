@@ -9,10 +9,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <local:CardToImagePathConverter x:Key="CardToImage" />
         <local:ColorToImagePathConverter x:Key="ColorToImage" />
+        <local:AnnouncesToStringConverter x:Key="AnnouncesToString" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -51,6 +52,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
+            <!-- Players labels -->
             <TextBlock x:Name="Player1_Label" Height="70" Width="70" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="0" Grid.Column="0" TextAlignment="Center" VerticalAlignment="Top" Text="1" FontSize="72" RenderTransformOrigin="0.5,0.5" Foreground="#FF5D5D5D" >
                 <TextBlock.RenderTransform>
                     <CompositeTransform Rotation="180"/>
@@ -64,12 +66,14 @@
                 </TextBlock.RenderTransform>
             </TextBlock>
 
+            <!-- Atout -->
             <Image x:Name="Atout" Grid.RowSpan="3" Width="100" Height="100" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" Source="{Binding GameEngine.Atout, Converter={StaticResource ColorToImage}}" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <CompositeTransform Rotation="90"/>
                 </Image.RenderTransform>
             </Image>
 
+            <!-- Cards -->
             <Image x:Name="Card1" Grid.Column="1" Grid.Row="1" Source="{Binding Table.Player1Card, Converter={StaticResource CardToImage}}" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <CompositeTransform Rotation="-45"/>
@@ -90,6 +94,21 @@
                     <CompositeTransform Rotation="45"/>
                 </Image.RenderTransform>
             </Image>
+
+            <!-- Announces -->
+            <TextBlock x:Name="Announce1" Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="24" RenderTransformOrigin="0.5,0.5" Margin="0,0,0,20" Text="{Binding GameEngine.AnnouncesPlayer1, Converter={StaticResource AnnouncesToString}}" >
+                <TextBlock.RenderTransform>
+                    <CompositeTransform Rotation="180"/>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <TextBlock x:Name="Announce2" Grid.Column="1" Grid.Row="4"  HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Bottom" FontSize="24" Margin="0,20,0,0" Text="{Binding GameEngine.AnnouncesPlayer2, Converter={StaticResource AnnouncesToString}}" />
+            <TextBlock x:Name="Announce3" Grid.Column="3" Grid.Row="4"  HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Bottom" FontSize="24" Margin="0,20,0,0" Text="{Binding GameEngine.AnnouncesPlayer3, Converter={StaticResource AnnouncesToString}}" />
+            <TextBlock x:Name="Announce4" Grid.Column="3" Grid.Row="0"  HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="24" RenderTransformOrigin="0.5,0.5" Margin="0,0,0,20" Text="{Binding GameEngine.AnnouncesPlayer4, Converter={StaticResource AnnouncesToString}}" >
+                <TextBlock.RenderTransform>
+                    <CompositeTransform Rotation="180"/>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
         </Grid>
 
     </Grid>

@@ -24,6 +24,7 @@ namespace Chibre_Server.Game
         private int playerTurnNumber;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private string[] announceProperties = new string[] { "AnnouncesPlayer1", "AnnouncesPlayer2", "AnnouncesPlayer3", "AnnouncesPlayer4" };
         private GameEngine()
         {
             teams = new Team[2];
@@ -157,16 +158,21 @@ namespace Chibre_Server.Game
         private void ManageAnnounces()
         {
             if(announces.Count == 1)
-                announces[0].Player.Team.Score.AddPoints(announces[0].Score);
+                announces[0].Player.Team.Score.AddPoints(announces[0].Score, true);
             else if(announces.Count > 1)
             {
                 announces.Sort(new Announce.AnnounceComparable()); //Desc order
                 //In any case, the kept annouce is the first if equality or the highest and all the annouces of the team
-                foreach (Announce announce in announces)
+                foreach (Announce announce in new List<Announce>(announces))
+                {
                     if (announce.Player.Team == announces[0].Player.Team)
-                        announce.Player.Team.Score.AddPoints(announce.Score);
+                        announce.Player.Team.Score.AddPoints(announce.Score, true);
+                    else
+                        announces.Remove(announce);
+                }
             }
-            announces.Clear();
+
+            NotifyAnnouncesChanged();
         }
 
         /// <summary>
@@ -370,6 +376,11 @@ namespace Chibre_Server.Game
             playerTurn = winner.Id;
             if (turnNumber == 0)
                 ManageAnnounces();
+            else if (turnNumber == 1)
+            {
+                announces.Clear();
+                NotifyAnnouncesChanged();
+            }
             if (++turnNumber < 9)
                 SendCards();
             else
@@ -551,6 +562,18 @@ namespace Chibre_Server.Game
             }
         }
 
+        private void NotifyAnnouncesChanged()
+        {
+            foreach(string announceProperty in announceProperties)
+                NotifyPropertyChanged(announceProperty);
+        }
+
+        private IEnumerable<Announce> AnnouncesForPlayer(int playerId)
+        {
+            // LINQ !
+            return from announce in announces where announce.Player.Id == playerId select announce;
+        }
+
         #region Properties
 
         public Boolean AtoutChoosen
@@ -581,6 +604,25 @@ namespace Chibre_Server.Game
         public Team Team2
         {
             get { return teams[1]; }
+        }
+
+        public IEnumerable<Announce> AnnouncesPlayer1
+        {
+            get { return AnnouncesForPlayer(0); }
+        }
+        public IEnumerable<Announce> AnnouncesPlayer2
+        {
+            get { return AnnouncesForPlayer(1); }
+        }
+
+        public IEnumerable<Announce> AnnouncesPlayer3
+        {
+            get { return AnnouncesForPlayer(2); }
+        }
+
+        public IEnumerable<Announce> AnnouncesPlayer4
+        {
+            get { return AnnouncesForPlayer(3); }
         }
 
         #endregion

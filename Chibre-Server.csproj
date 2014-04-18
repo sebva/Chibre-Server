@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Chibre_Server</RootNamespace>
     <AssemblyName>Chibre-Server</AssemblyName>
-    <DefaultLanguage>en</DefaultLanguage>
+    <DefaultLanguage>fr</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -108,6 +108,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AnnouncesToStringConverter.cs" />
     <Compile Include="ColorToImagePathConverter.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />

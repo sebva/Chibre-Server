@@ -78,6 +78,12 @@ namespace Chibre_Server.Game
         }
 
         #region Properties
+
+        public AnnounceType AnnounceType
+        {
+            get { return announceType; }
+        }
+
         public Player Player
         {
             get { return player; }
@@ -88,7 +94,7 @@ namespace Chibre_Server.Game
             get { return score; }
         }
 
-        private Card HighestCard
+        public Card HighestCard
         {
             get { return cards.Last(); }
         }

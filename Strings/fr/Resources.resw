@@ -117,13 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="As" xml:space="preserve">
+    <value>à l'as</value>
+  </data>
+  <data name="AsPlural" xml:space="preserve">
+    <value>les as</value>
+  </data>
+  <data name="Carreau" xml:space="preserve">
+    <value>carreau</value>
+  </data>
+  <data name="coeur" xml:space="preserve">
+    <value>cœur</value>
+  </data>
+  <data name="Dame" xml:space="preserve">
+    <value>à la dame</value>
+  </data>
+  <data name="DamePlural" xml:space="preserve">
+    <value>les dames</value>
+  </data>
+  <data name="Eight" xml:space="preserve">
+    <value>au 8</value>
+  </data>
+  <data name="Fifty" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="HundredAndFifty" xml:space="preserve">
+    <value>150</value>
+  </data>
+  <data name="HundredFollow" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="HundredSame" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="Nine" xml:space="preserve">
+    <value>au 9</value>
+  </data>
+  <data name="NinePlural" xml:space="preserve">
+    <value>les nells</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="Pique" xml:space="preserve">
+    <value>pique</value>
+  </data>
   <data name="PleaseConnect.Text" xml:space="preserve">
     <value>Veuillez connecter 4 joueurs à :</value>
+  </data>
+  <data name="Roi" xml:space="preserve">
+    <value>au roi</value>
+  </data>
+  <data name="RoiPlural" xml:space="preserve">
+    <value>les rois</value>
+  </data>
+  <data name="Seven" xml:space="preserve">
+    <value>au 7</value>
+  </data>
+  <data name="Six" xml:space="preserve">
+    <value>au 6</value>
   </data>
   <data name="Team1Members" xml:space="preserve">
     <value>Joueurs 1 et 3</value>
   </data>
   <data name="Team2Members" xml:space="preserve">
     <value>Joueurs 2 et 4</value>
+  </data>
+  <data name="Ten" xml:space="preserve">
+    <value>au 10</value>
+  </data>
+  <data name="TenPlural" xml:space="preserve">
+    <value>les 10</value>
+  </data>
+  <data name="Trefle" xml:space="preserve">
+    <value>trèfle</value>
+  </data>
+  <data name="Twenty" xml:space="preserve">
+    <value>3 cartes</value>
+  </data>
+  <data name="TwoHundred" xml:space="preserve">
+    <value>200</value>
+  </data>
+  <data name="Valet" xml:space="preserve">
+    <value>au valet</value>
+  </data>
+  <data name="ValetPlural" xml:space="preserve">
+    <value>les buur</value>
   </data>
 </root>
