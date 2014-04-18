@@ -41,6 +41,9 @@ namespace Chibre_Server.Game
             AtoutChoosen = false;
         }
 
+        /// <summary>
+        /// Singleton, return the instance
+        /// </summary>
         public static GameEngine Instance
         {
             get
@@ -52,6 +55,9 @@ namespace Chibre_Server.Game
             }
         }
 
+        /// <summary>
+        /// Start a new turn
+        /// </summary>
         public void StartNewTurn()
         {
             turnNumber = 0;
@@ -64,22 +70,50 @@ namespace Chibre_Server.Game
                         atoutPlayer = entry.Key;
             }
             else
-                atoutPlayer = (atoutPlayer + 1) % (teams.Length * teams[0].Length);
+                atoutPlayer = ComputeNextAtoutPlayer();
             playerTurn = atoutPlayer;
 
             DistributeCardsDevice();
         }
 
+        /// <summary>
+        /// Return the id of the next player to choose the atout
+        /// </summary>
+        /// <returns></returns>
+        private int ComputeNextAtoutPlayer()
+        {
+            return (atoutPlayer + 1) % (teams.Length * teams[0].Length);
+        }
+
+        /// <summary>
+        /// Return the id of the chibre player
+        /// </summary>
+        /// <returns></returns>
+        private int ComputeChibrePlayer()
+        {
+            return ((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count);
+        }
+
+        #region In-coming
+        /// <summary>
+        /// Choose the atout
+        /// </summary>
+        /// <param name="atout"></param>
         public void ChooseAtout(Color atout)
         {
             AtoutChoosen = true;
             this.atout = atout;
             NotifyPropertyChanged("Atout");
             SearchAnnounce();
-            players[((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count)].SendCards(false);
+            players[ComputeChibrePlayer()].SendCards(false);
             SendCards();
         }
 
+        /// <summary>
+        /// Add a card to the table from the player
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="player"></param>
         public void AddCardTable(Card card, Player player)
         {
             if (player.Id == playerTurn)
@@ -96,18 +130,30 @@ namespace Chibre_Server.Game
                     SendCards();
             }
         }
+        #endregion
 
+        #region out-going
+        /// <summary>
+        /// Send the cards to the player
+        /// </summary>
         private void SendCards()
         {
             players[playerTurn].LegalCards(LegalCards(players[playerTurn]));
         }
 
+        /// <summary>
+        /// Chibre
+        /// </summary>
         public void Chibrer()
         {
-            players[(atoutPlayer + teams[0].Length) % players.Count].SendCards(true);
+            players[ComputeChibrePlayer()].SendCards(true);
         }
+        #endregion
 
         #region Announce
+        /// <summary>
+        /// Compute the highest announces
+        /// </summary>
         private void ManageAnnounces()
         {
             if(announces.Count == 1)
@@ -123,6 +169,9 @@ namespace Chibre_Server.Game
             announces.Clear();
         }
 
+        /// <summary>
+        /// Search the announces (follow and same)
+        /// </summary>
         private void SearchAnnounce()
         {
             List<Pair<Value, AnnounceType>> sameCards = new List<Pair<Value, AnnounceType>>();
@@ -156,42 +205,54 @@ namespace Chibre_Server.Game
             }
         }
 
+        /// <summary>
+        /// Find the cards are followed
+        /// </summary>
+        /// <param name="cardsOriginal"></param>
+        /// <param name="serie"></param>
+        /// <returns></returns>
         private bool FindFollowCards(List<Card> cardsOriginal, int serie)
         {
             List<Card> cards = new List<Card>(cardsOriginal);
-            Debug.Assert(cardsOriginal.Count == 9);
 
-            bool output = false;
-            for (int i = 0; i <= (cards.Count - serie) && !output; ++i)
+            for (int i = 0; i <= (cards.Count - serie); ++i)
             {
-                output = true;
+                bool output = true;
                 for (int j = 0; j < serie - 1; ++j)
-                {
-                    Card c1 = cards[i + j + 1];
-                    Card c2 = cards[i + j];
-                    output &= c1.Color == c2.Color && (c1.Value - c2.Value) == 1;
-                }
+                    output &= CardsAreFollowed(cards[i + j + 1], cards[i + j]);
                 if (output)
                     return true;
             }
-            return output;
+            return false;
         }
 
+        /// <summary>
+        /// Check if 2 cards are followed
+        /// </summary>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <returns></returns>
+        private bool CardsAreFollowed(Card c1, Card c2)
+        {
+            return c1.Color == c2.Color && (c1.Value - c2.Value) == 1;
+        }
+
+        /// <summary>
+        /// Remove the follow cards, they cannot be used in another announce
+        /// </summary>
+        /// <param name="cardsOriginal"></param>
+        /// <param name="serie"></param>
+        /// <returns></returns>
         private List<List<Card>> RemoveFollowCards(ref List<Card> cardsOriginal, int serie)
         {
             List<Card> cards = new List<Card>(cardsOriginal);
-            Debug.Assert(cardsOriginal.Count == 9);
 
             List<List<Card>> followCards = new List<List<Card>>();
             for (int i = 0; i <= (cards.Count - serie); ++i)
             {
                 bool output = true;
                 for (int j = 0; j < serie - 1; ++j)
-                {
-                    Card c1 = cards[i + j + 1];
-                    Card c2 = cards[i + j];
-                    output &= c1.Color == c2.Color && (c1.Value - c2.Value) == 1;
-                }
+                    output &= CardsAreFollowed(cards[i + j + 1], cards[i + j]);
                 if (output)
                 {
                     List<Card> series = new List<Card>();
@@ -206,6 +267,12 @@ namespace Chibre_Server.Game
             return followCards;
         }
 
+        /// <summary>
+        /// Find same cards
+        /// </summary>
+        /// <param name="cards"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private bool FindSameCards(List<Card> cards, Value value)
         {
             int count = 0;
@@ -215,6 +282,12 @@ namespace Chibre_Server.Game
             return count == 4;
         }
 
+        /// <summary>
+        /// Remove the same cards, they cannot be used in another announce
+        /// </summary>
+        /// <param name="cards"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private List<Card> RemoveSameCard(ref List<Card> cards, Value value)
         {
             List<Card> announceCards = new List<Card>();
@@ -232,6 +305,10 @@ namespace Chibre_Server.Game
         }
         #endregion
 
+        /// <summary>
+        /// Add a player the game
+        /// </summary>
+        /// <param name="player"></param>
         public void AddPlayer(Player player)
         {
             Team team = teams[player.Id % 2];
@@ -240,6 +317,9 @@ namespace Chibre_Server.Game
             player.Team = team;
         }
 
+        /// <summary>
+        /// Distribute the card locally (there are not send because the chibre player doesn't receive his card at the same time the other)
+        /// </summary>
         private void DistributeCardsLocal()
         {
             List<Card> cards = new List<Card>();
@@ -260,6 +340,9 @@ namespace Chibre_Server.Game
             task.Wait();
         }
 
+        /// <summary>
+        /// Send the cards to the devices
+        /// </summary>
         private void DistributeCardsDevice()
         {
             foreach (KeyValuePair<int, Player> pair in players)
@@ -267,6 +350,9 @@ namespace Chibre_Server.Game
                     pair.Value.SendCards(pair.Value.Id == atoutPlayer);
         }
 
+        /// <summary>
+        /// Finish the turn a compute the point and the winner
+        /// </summary>
         private void FinishTheTurn()
         {
             List<Card> cards = table.Cards;
@@ -278,9 +364,7 @@ namespace Chibre_Server.Game
                 if(pair.First == card)
                     winner = players[pair.Second];
 
-            int score = ComputePointsTurn(cards);
-            Debug.WriteLine("Score turn : " + score);
-            winner.Team.Score.AddPoints(score);
+            winner.Team.Score.AddPoints(ComputePointsTurn(cards));
             table.Clear();
 
             playerTurn = winner.Id;
@@ -299,6 +383,11 @@ namespace Chibre_Server.Game
             }
         }
 
+        /// <summary>
+        /// Find the highest card
+        /// </summary>
+        /// <param name="cards"></param>
+        /// <returns></returns>
         private Card WhichCardDoesWin(List<Card> cards)
         {
             List<Card> atoutCards = new List<Card>();
@@ -319,6 +408,12 @@ namespace Chibre_Server.Game
                 return MostPowerfulCard(colorCards, false);
         }
 
+        /// <summary>
+        /// Compute the most powerful card
+        /// </summary>
+        /// <param name="cards"></param>
+        /// <param name="isAtout"></param>
+        /// <returns></returns>
         private Card MostPowerfulCard(List<Card> cards, bool isAtout)
         {
             Debug.Assert(cards.Count > 0);
@@ -338,6 +433,11 @@ namespace Chibre_Server.Game
             return maxCard;
         }
 
+        /// <summary>
+        /// Compute the points
+        /// </summary>
+        /// <param name="cards"></param>
+        /// <returns></returns>
         private int ComputePointsTurn(List<Card> cards)
         {
             int sum = 0;
@@ -346,6 +446,11 @@ namespace Chibre_Server.Game
             return sum;
         }
 
+        /// <summary>
+        /// Compute the legals cards
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         private List<Card> LegalCards(Player player)
         {
             List<Pair<Card, Object>> legalCards = new List<Pair<Card, Object>>();
