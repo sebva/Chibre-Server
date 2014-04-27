@@ -29,6 +29,9 @@ namespace Chibre_Server.Game
         /// <param name="points"></param>
         public void AddPoints(int points, bool addToGlobalScoreDirectly = false)
         {
+            if (GameEngine.Instance.ShouldDoublePoints)
+                points *= 2;
+
             if(addToGlobalScoreDirectly)
             {
                 Addition(points);
@@ -124,6 +127,14 @@ namespace Chibre_Server.Game
         public int One
         {
             get { return (int)categories[3].First; }
+        }
+
+        public int TotalPoints
+        {
+            get
+            {
+                return One + Twenty * 20 + Fifty * 50 + Hundred * 100;
+            }
         }
         #endregion
     }

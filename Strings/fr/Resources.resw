@@ -204,4 +204,40 @@
   <data name="ValetPlural" xml:space="preserve">
     <value>les buur</value>
   </data>
+  <data name="Settings.Title" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="GameTypeHeader.Text" xml:space="preserve">
+    <value>Type de partie</value>
+  </data>
+  <data name="NoWinner" xml:space="preserve">
+    <value>Aucune équipe n'a gagné. Égalité parfaite !</value>
+  </data>
+  <data name="PiqueDoubleText.Text" xml:space="preserve">
+    <value>Mode pique double. Si activé, les points comptent double lorsque l'atout est pique.</value>
+  </data>
+  <data name="PiqueDoubleToggle.OffContent" xml:space="preserve">
+    <value>Pique simple</value>
+  </data>
+  <data name="PiqueDoubleToggle.OnContent" xml:space="preserve">
+    <value>Pique double</value>
+  </data>
+  <data name="PointsDouble.Text" xml:space="preserve">
+    <value>Points à atteindre en pique double</value>
+  </data>
+  <data name="PointsHeader.Text" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="PointsSimple.Text" xml:space="preserve">
+    <value>Points à atteindre en pique simple</value>
+  </data>
+  <data name="Team1Winner" xml:space="preserve">
+    <value>L'équipe 1 a gagné la partie !</value>
+  </data>
+  <data name="Team2Winner" xml:space="preserve">
+    <value>L'équipe 2 a gagné la partie !</value>
+  </data>
+  <data name="GameSettings" xml:space="preserve">
+    <value>Paramètres de la partie</value>
+  </data>
 </root>

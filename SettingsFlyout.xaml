@@ -1,0 +1,51 @@
+﻿<SettingsFlyout
+    x:Class="Chibre_Server.SettingsFlyout"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Chibre_Server"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    x:Uid="Settings"
+    Title="Paramètres partie"
+    xmlns:callisto="using:Callisto.Controls"
+    d:DesignWidth="346">
+
+    <!-- Ce StackPanel sert de panneau racine pour la disposition verticale des sections de contenu -->
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+        <!-- Les StackPanels ci-dessous définissent les sections de contenu individuelles -->
+
+        <!-- Section de contenu 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+
+            <!-- En-tête de la section 1 -->
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" x:Uid="GameTypeHeader" />
+            
+            <!-- Corps de la section 1 -->
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,5" TextWrapping="Wrap" x:Uid="PiqueDoubleText" />
+            <ToggleSwitch x:Name="PiqueDoubleToggle" x:Uid="PiqueDoubleToggle" IsOn="{Binding Settings.PiqueDouble, Mode=TwoWay}" />
+
+
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+
+            <!-- En-tête de la section 1 -->
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" x:Uid="PointsHeader" TextWrapping="Wrap" />
+
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" x:Uid="PointsSimple" Text="Points" Margin="0,0,0,10" />
+            <!-- Corps de la section 1 -->
+            <callisto:NumericUpDown x:Name="UpDownSimple" Minimum="1" Maximum="10000" Value="{Binding Settings.PointsSimple, Mode=TwoWay}" />
+
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" x:Uid="PointsDouble" Text="Points" Margin="0,0,0,10" />
+            <!-- Corps de la section 1 -->
+            <callisto:NumericUpDown x:Name="UpDownDouble" Minimum="1" Maximum="10000" Value="{Binding Settings.PointsDouble, Mode=TwoWay}" />
+
+        </StackPanel>
+        <!-- Définir d'autres sections de contenu ci-dessous, si nécessaire -->
+
+    </StackPanel>
+</SettingsFlyout>

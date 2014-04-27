@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,6 +35,7 @@ namespace Chibre_Server
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private static GamePage latestInstance;
         private ResourceLoader loader = new ResourceLoader();
+        private IAsyncOperation<IUICommand> asyncCommand = null;
 
         /// <summary>
         /// Cela peut être remplacé par un modèle d'affichage fortement typé.
@@ -86,10 +90,47 @@ namespace Chibre_Server
             gameEngine.Team2.Score.PropertyChanged += Score_PropertyChanged;
         }
 
-        void Score_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        async void Score_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Score")
+            {
                 DrawScoreBoard();
+
+                GameEngine ge = GameEngine.Instance;
+                if (!ge.IsGameFinished())
+                    return;
+
+                int difference = ge.Team1.Score.TotalPoints - ge.Team2.Score.TotalPoints;
+                string message;
+                if(difference > 0) // Team 1 = Winner
+                {
+                    message = loader.GetString("Team1Winner");
+                }
+                else if(difference < 0) // Team 2 = Winner
+                {
+                    message = loader.GetString("Team2Winner");
+                }
+                else // No winner
+                {
+                    message = loader.GetString("NoWinner");
+                }
+
+                var md = new MessageDialog(message);
+
+                if(asyncCommand != null)
+                {
+                    asyncCommand.Cancel();
+                }
+
+                await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                    {
+                        asyncCommand = md.ShowAsync();
+                        await asyncCommand;
+                        this.Frame.GoBack();
+                    });
+                GameEngine.Instance.ResetInstance();
+                ConnectionManager.Instance.ResetInstance();
+            }
         }
 
         #region ScoreBoard

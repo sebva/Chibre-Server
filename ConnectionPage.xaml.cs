@@ -6,9 +6,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -92,6 +94,22 @@ namespace Chibre_Server
                 });
         }
 
+        private void ShowSettingsFlyout(object sender, SettingsPaneCommandsRequestedEventArgs e)
+        {
+            ResourceLoader loader = new ResourceLoader();
+            SettingsCommand defaultsCommand = new SettingsCommand("general", loader.GetString("GameSettings"),
+                    (handler) =>
+                    {
+                        SettingsFlyout sf = new SettingsFlyout();
+                        sf.Unloaded += (s, ee) =>
+                        {
+                            Settings.GetInstance().SaveState();
+                        };
+                        sf.Show();
+                    });
+            e.Request.ApplicationCommands.Add(defaultsCommand);
+        }
+
         /// <summary>
         /// Remplit la page à l'aide du contenu passé lors de la navigation. Tout état enregistré est également
         /// fourni lorsqu'une page est recréée à partir d'une session antérieure.
@@ -105,6 +123,10 @@ namespace Chibre_Server
         /// antérieure. L'état n'aura pas la valeur Null lors de la première visite de la page.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            ResourceLoader loader = new ResourceLoader();
+            // Enregistrement du SettingsFlyout auprès du système
+            SettingsPane.GetForCurrentView().CommandsRequested += ShowSettingsFlyout;
+
             this.IP.Text = String.Join("\n", ConnectionManager.GetIPs());
         }
 
@@ -118,6 +140,7 @@ namespace Chibre_Server
         /// état sérialisable.</param>
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            SettingsPane.GetForCurrentView().CommandsRequested -= ShowSettingsFlyout;
         }
 
         #region Inscription de NavigationHelper

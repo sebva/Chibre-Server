@@ -120,6 +120,9 @@
   <data name="PleaseConnect.Text" xml:space="preserve">
     <value>Please connect 4 players to:</value>
   </data>
+  <data name="Settings.Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="Team1Members" xml:space="preserve">
     <value>Players 1 &amp; 3</value>
   </data>

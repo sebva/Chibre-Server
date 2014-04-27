@@ -104,5 +104,10 @@ namespace Chibre_Server
             }
             return ipstrings.ToArray();
         }
+
+        internal void ResetInstance()
+        {
+            clients.Clear();
+        }
     }
 }

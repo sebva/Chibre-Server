@@ -24,7 +24,7 @@ namespace Chibre_Server.Game
         private int playerTurnNumber;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private string[] announceProperties = new string[] { "AnnouncesPlayer1", "AnnouncesPlayer2", "AnnouncesPlayer3", "AnnouncesPlayer4" };
+        private static readonly string[] announceProperties = new string[] { "AnnouncesPlayer1", "AnnouncesPlayer2", "AnnouncesPlayer3", "AnnouncesPlayer4" };
         private GameEngine()
         {
             teams = new Team[2];
@@ -54,6 +54,16 @@ namespace Chibre_Server.Game
 
                 return instance;
             }
+        }
+
+        public void ResetInstance()
+        {
+            foreach(KeyValuePair<int, Player> player in players)
+            {
+                Protocol.GoodBye(player.Value.Connection);
+            }
+
+            instance = null;
         }
 
         /// <summary>
@@ -382,7 +392,12 @@ namespace Chibre_Server.Game
                 NotifyAnnouncesChanged();
             }
             if (++turnNumber < 9)
-                SendCards();
+            {
+                if (IsGameFinished())
+                    NotifyPropertyChanged("Winner");
+                else
+                    SendCards();
+            }
             else
             {
                 winner.Team.Score.AddPoints(5); // 5 de der
@@ -390,8 +405,25 @@ namespace Chibre_Server.Game
                     winner.Team.Score.AddPoints(100); // Add match
                 foreach (Team team in teams)
                     team.Score.ComputeScore();
-                StartNewTurn();
+
+                if (IsGameFinished())
+                    NotifyPropertyChanged("Winner");
+                else
+                    StartNewTurn();
             }
+        }
+
+        internal bool IsGameFinished()
+        {
+            bool gameFinished = false;
+            foreach (Team team in teams)
+            {
+                if (team.Score.TotalPoints >= Settings.GetInstance().PointsCurrent)
+                {
+                    gameFinished = true;
+                }
+            }
+            return gameFinished;
         }
 
         /// <summary>
@@ -623,6 +655,14 @@ namespace Chibre_Server.Game
         public IEnumerable<Announce> AnnouncesPlayer4
         {
             get { return AnnouncesForPlayer(3); }
+        }
+
+        public bool ShouldDoublePoints
+        {
+            get
+            {
+                return Settings.GetInstance().PiqueDouble && atout == Color.Pique;
+            }
         }
 
         #endregion

@@ -100,6 +100,14 @@ namespace Chibre_Server.Game
             connection.SendPayload(timeToPlay.Stringify());
         }
 
+        public static void GoodBye(Connection connection)
+        {
+            JsonObject goodBye = new JsonObject();
+            goodBye.SetNamedValue("action", JsonValue.CreateStringValue("goodbye"));
+
+            connection.SendPayload(goodBye.Stringify());
+        }
+
         #endregion
 
         public static Card JsonObjectToCard(JsonObject data)

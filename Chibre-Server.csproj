@@ -102,9 +102,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -130,6 +127,7 @@
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Protocol.cs" />
     <Compile Include="Game\Score.cs" />
+    <Compile Include="Game\Settings.cs" />
     <Compile Include="Game\Table.cs" />
     <Compile Include="Game\Team.cs" />
     <Compile Include="Game\Utils.cs" />
@@ -137,12 +135,16 @@
     <Compile Include="Game\Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CardToImagePathConverter.cs" />
+    <Compile Include="SettingsFlyout.xaml.cs">
+      <DependentUpon>SettingsFlyout.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Chibre-Server_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <PRIResource Include="Strings\fr\Resources.resw" />
     <PRIResource Include="Strings\en\Resources.resw" />
   </ItemGroup>
@@ -212,6 +214,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SettingsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Callisto">
+      <HintPath>packages\Callisto.1.4.0\lib\netcore451\Callisto.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
