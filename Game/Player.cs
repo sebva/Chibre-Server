@@ -27,7 +27,7 @@ namespace Chibre_Server.Game
         /// <summary>
         /// Give the possibility to choose atout
         /// </summary>
-        /// <param name="atout">Things</param>
+        /// <param name="atout"></param>
         public void ChooseAtout(Color atout)
         {
             team.GameEngine.ChooseAtout(atout);

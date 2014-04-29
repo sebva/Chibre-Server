@@ -56,6 +56,9 @@ namespace Chibre_Server.Game
             }
         }
 
+        /// <summary>
+        /// Reset the game engine for a new game
+        /// </summary>
         public void ResetInstance()
         {
             foreach(KeyValuePair<int, Player> player in players)
@@ -90,7 +93,7 @@ namespace Chibre_Server.Game
         /// <summary>
         /// Return the id of the next player to choose the atout
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Id of the player</returns>
         private int ComputeNextAtoutPlayer()
         {
             return (atoutPlayer + 1) % (teams.Length * teams[0].Length);
@@ -99,7 +102,7 @@ namespace Chibre_Server.Game
         /// <summary>
         /// Return the id of the chibre player
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Id of the player</returns>
         private int ComputeChibrePlayer()
         {
             return ((atoutPlayer + players[atoutPlayer].Team.Length) % players.Count);
@@ -107,7 +110,7 @@ namespace Chibre_Server.Game
 
         #region In-coming
         /// <summary>
-        /// Choose the atout
+        /// Choose the atout, compute the announces and send the cards
         /// </summary>
         /// <param name="atout"></param>
         public void ChooseAtout(Color atout)
@@ -225,8 +228,8 @@ namespace Chibre_Server.Game
         /// Find the cards are followed
         /// </summary>
         /// <param name="cardsOriginal"></param>
-        /// <param name="serie"></param>
-        /// <returns></returns>
+        /// <param name="serie">Size of the serie</param>
+        /// <returns>bool, if the cards are followed</returns>
         private bool FindFollowCards(List<Card> cardsOriginal, int serie)
         {
             List<Card> cards = new List<Card>(cardsOriginal);
@@ -247,7 +250,7 @@ namespace Chibre_Server.Game
         /// </summary>
         /// <param name="c1"></param>
         /// <param name="c2"></param>
-        /// <returns></returns>
+        /// <returns>bool, 2 cards are followed</returns>
         private bool CardsAreFollowed(Card c1, Card c2)
         {
             return c1.Color == c2.Color && (c1.Value - c2.Value) == 1;
@@ -257,8 +260,8 @@ namespace Chibre_Server.Game
         /// Remove the follow cards, they cannot be used in another announce
         /// </summary>
         /// <param name="cardsOriginal"></param>
-        /// <param name="serie"></param>
-        /// <returns></returns>
+        /// <param name="serie">Size of the serie</param>
+        /// <returns>Lists of followed cards</returns>
         private List<List<Card>> RemoveFollowCards(ref List<Card> cardsOriginal, int serie)
         {
             List<Card> cards = new List<Card>(cardsOriginal);
@@ -288,7 +291,7 @@ namespace Chibre_Server.Game
         /// </summary>
         /// <param name="cards"></param>
         /// <param name="value"></param>
-        /// <returns></returns>
+        /// <returns>bool, if a card is found 4 times</returns>
         private bool FindSameCards(List<Card> cards, Value value)
         {
             int count = 0;
@@ -303,7 +306,7 @@ namespace Chibre_Server.Game
         /// </summary>
         /// <param name="cards"></param>
         /// <param name="value"></param>
-        /// <returns></returns>
+        /// <returns>List of same cards</returns>
         private List<Card> RemoveSameCard(ref List<Card> cards, Value value)
         {
             List<Card> announceCards = new List<Card>();
@@ -430,7 +433,7 @@ namespace Chibre_Server.Game
         /// Find the highest card
         /// </summary>
         /// <param name="cards"></param>
-        /// <returns></returns>
+        /// <returns>Card</returns>
         private Card WhichCardDoesWin(List<Card> cards)
         {
             List<Card> atoutCards = new List<Card>();
@@ -456,7 +459,7 @@ namespace Chibre_Server.Game
         /// </summary>
         /// <param name="cards"></param>
         /// <param name="isAtout"></param>
-        /// <returns></returns>
+        /// <returns>Card</returns>
         private Card MostPowerfulCard(List<Card> cards, bool isAtout)
         {
             Debug.Assert(cards.Count > 0);
@@ -480,7 +483,7 @@ namespace Chibre_Server.Game
         /// Compute the points
         /// </summary>
         /// <param name="cards"></param>
-        /// <returns></returns>
+        /// <returns>Score</returns>
         private int ComputePointsTurn(List<Card> cards)
         {
             int sum = 0;
@@ -493,7 +496,7 @@ namespace Chibre_Server.Game
         /// Compute the legals cards
         /// </summary>
         /// <param name="player"></param>
-        /// <returns></returns>
+        /// <returns>List of legal cards</returns>
         private List<Card> LegalCards(Player player)
         {
             List<Pair<Card, Object>> legalCards = new List<Pair<Card, Object>>();

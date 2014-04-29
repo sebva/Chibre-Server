@@ -171,18 +171,18 @@ namespace Chibre_Server.Game
         /// </summary>
         /// <param name="card"></param>
         /// <param name="isAtout"></param>
-        /// <returns></returns>
+        /// <returns>Power</returns>
         public static int PowerCard(Card card, bool isAtout)
         {
             return powerCards[Tuple.Create(card.Value, isAtout)];
         }
 
         /// <summary>
-        /// Multi-ton
+        /// Multi-ton of the cards
         /// </summary>
         /// <param name="color"></param>
         /// <param name="value"></param>
-        /// <returns></returns>
+        /// <returns>Card</returns>
         public static Card CardInstance(Color color, Value value)
         {
             Tuple<Color, Value> tuple = Tuple.Create<Color, Value>(color, value);

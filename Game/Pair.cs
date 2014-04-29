@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Chibre_Server
 {
+    /// <summary>
+    /// KeyPair doesn't allow to modifie the reference in a foreach. This class allows it !
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
     class Pair<T1, T2>
     {
         public Pair(T1 t1, T2 t2)

@@ -36,7 +36,7 @@ namespace Chibre_Server.Game
         /// <summary>
         /// Return the color of the first card in the table
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Color</returns>
         public Color FirstCardColor()
         {
             return cards[0].First.Color;
@@ -54,7 +54,7 @@ namespace Chibre_Server.Game
         /// Return the card of the player
         /// </summary>
         /// <param name="playerId"></param>
-        /// <returns></returns>
+        /// <returns>Card</returns>
         private Card CardForPlayer(int playerId)
         {
             foreach(Pair<Card, int> card in cards)
